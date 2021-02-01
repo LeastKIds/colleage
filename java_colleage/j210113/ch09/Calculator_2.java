@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Calculator extends JFrame implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
     private JTextField textField;
     private JPanel panel;
     private JButton[] numberButtons;
