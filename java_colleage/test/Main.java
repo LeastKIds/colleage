@@ -1,4 +1,4 @@
-package project.colorset;
+package test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.util.*;
 
  public class Main extends JFrame{
-    private JPanel startPanel, mainPanel, menualPanel;
+     JPanel startPanel, mainPanel, menualPanel;
     Execution1 ex=new Execution1();
 
 
@@ -27,7 +27,7 @@ import java.util.*;
 
         JLabel titleLabel=new JLabel("색깔 맞추기");
         titleLabel.setBounds(200,50,300,100);                       //  ------------> 제목 위치
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
         titleLabel.setOpaque(true);
         titleLabel.setBackground(Color.blue);                       // ------------->   제목 배경
         titleLabel.setFont(new Font("고딕", Font.BOLD,30));        // ------------->   제목 글자 색, 크기 결정
@@ -47,14 +47,14 @@ import java.util.*;
         JLabel explaineLabel=new JLabel("설명");
         explaineLabel.setBounds(50,50,300,100);
         explaineLabel.setOpaque(true);
-        explaineLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        explaineLabel.setHorizontalAlignment(JLabel.CENTER);
         explaineLabel.setBackground(new Color(204,204,204));
         explaineLabel.setFont(new Font("고딕", Font.BOLD, 30));
 
 
         JLabel menualLabel=new JLabel();
         menualLabel.setText("크기가 중간인 글자의 색을 찾아 누르세요");
-        menualLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        menualLabel.setHorizontalAlignment(JLabel.CENTER);
         menualLabel.setBounds(50,150,300,100);
         menualLabel.setOpaque(true);
         menualLabel.setBackground(new Color(204,204,204));
@@ -81,7 +81,7 @@ import java.util.*;
         mainPanel.setBounds(0,0,700,700);
         mainPanel.setBackground(Color.WHITE);           //  -------------------------> 메인 페널 색
         mainPanel.add(menualPanel);
-        mainPanel.setVisible(false);
+        //mainPanel.setVisible(false);
 
                 //  점수판
         JPanel pointPanel=new JPanel();
@@ -189,7 +189,7 @@ import java.util.*;
         startPanel.add(titleLabel);
         startPanel.add(startButton);
         this.add(startPanel);
-        this.add(mainPanel);
+        //this.add(mainPanel);
         
         //  시작 버튼 누를 시 --------------------------------------------
         startButton.addActionListener(new ActionListener(){
@@ -198,9 +198,14 @@ import java.util.*;
 			public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 //startPanel.setVisible(false);
-                Main.this.remove(startPanel);
-                mainPanel.setVisible(true);
-                menualPanel.setVisible(true);
+                startPanel.setBackground(new Color(255,255,255,0));
+                Main.this.startPanel.removeAll();
+                //Main.this.getContentPane().add(mainPanel);
+                //mainPanel.setVisible(true);
+                //mainPanel.setVisible(true);
+                Main.this.add(mainPanel);
+                Main.this.mainPanel.setVisible(true);
+                //menualPanel.setVisible(true);
                 
 				
 			}
@@ -213,7 +218,7 @@ import java.util.*;
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
-                menualPanel.setVisible(false);
+                Main.this.menualPanel.removeAll();
                 pointPanel.setVisible(true);
                 questionPanel.setVisible(true);
                 answerPanel.setVisible(true);
@@ -236,3 +241,4 @@ import java.util.*;
         JFrame frame=new Main();
     }
 }
+

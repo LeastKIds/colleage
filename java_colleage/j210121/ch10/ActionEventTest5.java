@@ -4,6 +4,10 @@ import javax.swing.*;
 
 class MyFrame extends JFrame
 {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private JButton button;
     private JLabel label;
 

@@ -26,4 +26,10 @@ public class FlyingCar1 implements Drivable,Flyable{
         obj.drive();
         obj.fly();
     }
+
+    @Override
+    public void dirve() {
+        // TODO Auto-generated method stub
+
+    }
 }

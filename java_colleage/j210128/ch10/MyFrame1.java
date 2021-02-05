@@ -38,4 +38,10 @@ public class MyFrame1 extends JFrame implements ActionListener{
         this.setVisible(true);
 
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+
+    }
 }
