@@ -1,4 +1,5 @@
-package ch10;
+package j210205.ch11;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,20 +10,20 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ImagePuzzle extends JFrame implements ActionListener {
+public class ImagePuzzle1 extends JFrame implements ActionListener {
     private int pieces = 4;
     private int totalPieces = pieces * pieces;
     private BufferedImage img;
     private ArrayList<Integer> pieceNums = new ArrayList<>();
 
     public static void main(String[] args) {
-        new ImagePuzzle();
+        new ImagePuzzle1();
     }
 
-    public ImagePuzzle() { // constructor
+    public ImagePuzzle1() { // constructor
         this.setTitle("Puzzle Game");
         try {
-            img = ImageIO.read(new File("galaxy.jpg"));
+            img = ImageIO.read(new File("C:/github/colleage/java_colleage/j210205/galaxy.jpg"));
         }catch(IOException e) {
             e.printStackTrace();
             System.exit(1);

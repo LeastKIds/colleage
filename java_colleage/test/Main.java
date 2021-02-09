@@ -5,7 +5,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
- public class Main extends JFrame{
+ public class Main extends JFrame implements ActionListener{
+     Container contentPane=getContentPane();
+     JButton startButton;
      JPanel startPanel, mainPanel, menualPanel;
     Execution1 ex=new Execution1();
 
@@ -32,7 +34,7 @@ import java.util.*;
         titleLabel.setBackground(Color.blue);                       // ------------->   제목 배경
         titleLabel.setFont(new Font("고딕", Font.BOLD,30));        // ------------->   제목 글자 색, 크기 결정
         
-        JButton startButton=new JButton("시작");
+        startButton=new JButton("시작");
         startButton.setBounds(300,400,100,50);
         startButton.setBackground(Color.BLUE);
         startButton.setFont(new Font("고딕",Font.ITALIC,20));
@@ -76,7 +78,7 @@ import java.util.*;
 
 
         //  게임 화면--------------------------------------------------------
-        JPanel mainPanel=new JPanel();
+        mainPanel=new JPanel();
         mainPanel.setLayout(null);
         mainPanel.setBounds(0,0,700,700);
         mainPanel.setBackground(Color.WHITE);           //  -------------------------> 메인 페널 색
@@ -101,7 +103,7 @@ import java.util.*;
 
         pointPanel.add(pointTextLabel);
         pointPanel.add(pointLabel);
-        pointPanel.setVisible(false);
+        // pointPanel.setVisible(false);
 
                 // 문제 판
         JPanel questionPanel=new JPanel();
@@ -151,7 +153,7 @@ import java.util.*;
         questionPanel.add(letterPanel2);
         questionPanel.add(letterPanel3);
 
-        questionPanel.setVisible(false);
+        // questionPanel.setVisible(false);
 
 
         //  버튼
@@ -173,7 +175,7 @@ import java.util.*;
         answerPanel.add(button2);
         answerPanel.add(button3);
         
-        answerPanel.setVisible(false);
+        // answerPanel.setVisible(false);
         
 
         //  패널에 추가 하고 숨기고 ------------------------------------------------------
@@ -192,43 +194,43 @@ import java.util.*;
         //this.add(mainPanel);
         
         //  시작 버튼 누를 시 --------------------------------------------
-        startButton.addActionListener(new ActionListener(){
+         startButton.addActionListener(this);
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                //startPanel.setVisible(false);
-                startPanel.setBackground(new Color(255,255,255,0));
-                Main.this.startPanel.removeAll();
-                //Main.this.getContentPane().add(mainPanel);
-                //mainPanel.setVisible(true);
-                //mainPanel.setVisible(true);
-                Main.this.add(mainPanel);
-                Main.this.mainPanel.setVisible(true);
-                //menualPanel.setVisible(true);
+		// 	@Override
+		// 	public void actionPerformed(ActionEvent e) {
+        //         // TODO Auto-generated method stub
+        //         //startPanel.setVisible(false);
+        //         startPanel.setBackground(new Color(255,255,255,0));
+        //         contentPane.startPanel.removeAll();
+        //         //Main.this.getContentPane().add(mainPanel);
+        //         //mainPanel.setVisible(true);
+        //         //mainPanel.setVisible(true);
+        //         Main.this.add(mainPanel);
+        //         Main.this.mainPanel.setVisible(true);
+        //         //menualPanel.setVisible(true);
                 
 				
-			}
+		// 	}
             
-        });
+        // });
 
         //  설명 닫기 버튼 누를 시 ----------------------------------------
-        menualButton.addActionListener(new ActionListener(){
+        // menualButton.addActionListener(new ActionListener(){
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
-                Main.this.menualPanel.removeAll();
-                pointPanel.setVisible(true);
-                questionPanel.setVisible(true);
-                answerPanel.setVisible(true);
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         // TODO Auto-generated method stub
+        //         Main.this.menualPanel.removeAll();
+        //         pointPanel.setVisible(true);
+        //         questionPanel.setVisible(true);
+        //         answerPanel.setVisible(true);
 
-               ex.repeat(letterLabel1, letterLabel2, letterLabel3,button1,button2,button3);
-               ex.setPoint(pointLabel);
-               ex.setQuestionTimer(questionTimer);
-            }
+        //        ex.repeat(letterLabel1, letterLabel2, letterLabel3,button1,button2,button3);
+        //        ex.setPoint(pointLabel);
+        //        ex.setQuestionTimer(questionTimer);
+        //     }
             
-        });
+        // });
 
         this.setVisible(true);
     }
@@ -239,6 +241,20 @@ import java.util.*;
     public static void main(String[] args)
     {
         JFrame frame=new Main();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        if(e.getSource()==startButton)
+        {
+            System.out.println("click");
+            this.remove(startPanel);
+            this.add(mainPanel);
+            revalidate();
+            repaint();
+        }
+
     }
 }
 

@@ -1,30 +1,54 @@
 package test;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-public class MyLab {
+public class MyLab extends JFrame implements ActionListener{
     public static void main(String[] args)
     {
-        JFrame f=new JFrame();
-        JPanel panel=new JPanel();
-        f.add(panel);
+       MyLab frame=new MyLab();
+    }
 
-        JLabel label1=new JLabel("아니");
-        JLabel label2=new JLabel("2");
-        JTextField field1=new JTextField(15);
-        JTextField field2=new JTextField(15);
-        JButton button=new JButton("3");
+    JPanel panel1=new JPanel();
+    JButton button1=new JButton("누름");
+    JPanel panel2=new JPanel();
+    JButton button2=new JButton("dldmd");
 
-        panel.add(label1);
-        panel.add(field1);
-        panel.add(label2);
-        panel.add(field2);
-        panel.add(button);
+    public MyLab()
+    {
+        panel1.setBackground(Color.BLACK);
+        panel2.setBackground(Color.GREEN);
 
-        f.setSize(300,150);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setTitle("4");
-        f.setVisible(true);
+        this.setSize(300,300);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
 
+
+        button1.addActionListener(this);
+        panel1.add(button1);
+        panel2.add(button2);
+        button2.addActionListener(this);
+        this.add(panel1);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        if(e.getSource()==button1)
+        {
+            this.remove(panel1);
+            this.add(panel2);
+
+            revalidate();
+            repaint();
+        }
+        if(e.getSource()==button2)
+        {
+            this.removeAll();
+            revalidate();
+            repaint();
+        }
     }
 }

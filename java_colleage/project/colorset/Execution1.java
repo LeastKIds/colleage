@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.Timer;
 
-public class Execution1 extends JFrame implements ActionListener{
+public class Execution1 extends JFrame implements ActionListener, Runnable{
 
     Random rand=new Random();
     private int time=6;
@@ -20,13 +20,12 @@ public class Execution1 extends JFrame implements ActionListener{
     JLabel[] actionLetter=new JLabel[3];
     JLabel pointCheck=new JLabel();
     JLabel timeCheck=new JLabel();
+    JPanel subMainPanel, subMenualPanel, subRetryPanel;
+    JLabel subLastPoint;
+    Container mainContentPane;
+    Timer timer;
+    TimerTask timerTask;
 
-
-    
-    
-
-
-    
 
     public void randomLetterSetting(JLabel letterLabel1, JLabel letterLabel2, JLabel letterLabel3)
     {
@@ -95,7 +94,7 @@ public class Execution1 extends JFrame implements ActionListener{
             }
             randomSize.remove(randomInt);
 
-            letterLabel1=actionLetter[i];
+            //letterLabel1=actionLetter[i];
         }
         
     }
@@ -136,8 +135,8 @@ public class Execution1 extends JFrame implements ActionListener{
     public void secondTimer()
     {
         second=0;
-        Timer timer=new Timer();
-        TimerTask timerTask=new TimerTask()
+        timer=new Timer();
+        timerTask=new TimerTask()
         {
 
 			@Override
@@ -146,12 +145,18 @@ public class Execution1 extends JFrame implements ActionListener{
                 
                 
                 second++;
+                System.out.println(answer);
                 timeCheck.setText(Integer.toString(time-second));
                 System.out.println(second);
                 if(second>=time)
                 {
                     System.out.println("시간초과");
                     timeCheck.setText("시간 초과!!");
+                    
+                    // subMainPanel.setVisible(false);
+                    retryGame();
+                    
+
                     timer.cancel();
                 }
 
@@ -161,16 +166,18 @@ public class Execution1 extends JFrame implements ActionListener{
         
         };
         timer.schedule(timerTask,0,1000);
+
+
     }
 
-    public void setPoint(JLabel pointLabel)
+    public void retryGame()
     {
-        pointCheck=pointLabel;
+        subLastPoint.setText(Integer.toString(point));
+        subRetryPanel.setVisible(true);
     }
-    public void setQuestionTimer(JLabel questionTimer)
-    {
-        timeCheck=questionTimer;
-    }
+
+
+   
 
 
     @Override
@@ -179,6 +186,7 @@ public class Execution1 extends JFrame implements ActionListener{
         if(e.getSource()==actionButton[0] && actionButton[0].getText().equals(answer))
         {
                 System.out.println("정답1");
+                timer.cancel();
                 secondTimer();
                 count++;
                 point++;
@@ -197,6 +205,7 @@ public class Execution1 extends JFrame implements ActionListener{
         {
             
                 System.out.println("정답2");
+                timer.cancel();
                 secondTimer();
                 count++;
                 point++;
@@ -212,6 +221,7 @@ public class Execution1 extends JFrame implements ActionListener{
         else if(e.getSource()==actionButton[2] && actionButton[2].getText().equals(answer))
         {
                 System.out.println("정답3");
+                timer.cancel();
                 secondTimer();
                 count++;
                 point++;
@@ -228,11 +238,49 @@ public class Execution1 extends JFrame implements ActionListener{
         else
         {
             System.out.println("삐삐끼삒삒삐끼ㅃ끼ㅃㄲ");
+            actionButton[0].setEnabled(false);
+            actionButton[1].setEnabled(false);
+            actionButton[2].setEnabled(false);
+            retryGame();
+            timer.cancel();
+            
         }
 
 
     }
 
+    public void setPanel(JPanel mainPanel, JPanel menualPanel, JPanel retryPanel, JLabel lastPoint)
+    {
+        subMainPanel=mainPanel;
+        subMenualPanel=menualPanel;
+        subRetryPanel=retryPanel;
+        subLastPoint=lastPoint;
+    }
+
+    public void setContentPane(Container contentPane)
+    {
+        mainContentPane=contentPane;
+    }
+
+    public void setPoint(JLabel pointLabel)
+    {
+        pointCheck=pointLabel;
+    }
+
+    public void setQuestionTimer(JLabel questionTimer)
+    {
+        timeCheck=questionTimer;
+    }
+
+    public void resetGame()
+    {
+        time=6;
+        second=0;
+        point=0;
+        pointCheck.setText("0");
+        randomLetterSetting(actionLetter[0], actionLetter[1], actionLetter[2]);
+        secondTimer();
+    }
 
 
 }

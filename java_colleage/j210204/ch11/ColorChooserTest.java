@@ -60,7 +60,7 @@ public class ColorChooserTest extends JFrame implements ChangeListener , ActionL
             selectBtn.setText("SetColor");
         }
 
-        //repaint();
+        repaint();
     }
     
 }
