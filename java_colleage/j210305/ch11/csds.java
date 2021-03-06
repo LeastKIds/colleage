@@ -1,13 +1,19 @@
 package j210305.ch11;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import javax.imageio.*;
-import java.io.*;
 
-public class AnimationBasic extends JPanel implements ActionListener
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+public class csds extends JPanel implements ActionListener
 {
     /**
      *
@@ -21,7 +27,7 @@ public class AnimationBasic extends JPanel implements ActionListener
     private int moveSection=0;
     private boolean xUp=true, yUp=true;
 
-    public AnimationBasic()
+    public csds()
     {
         //이미지 파일을 읽어서 image 객체로 생성
         // 20ms 마다 이벤트를 발생시키는 timer 객체를 생성하고 timer를 start 시킴
@@ -55,6 +61,9 @@ public class AnimationBasic extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         // x,y 좌표 변경
+
+        
+
         
         if(y1<20 && xUp==true)
         {
@@ -104,7 +113,7 @@ public class AnimationBasic extends JPanel implements ActionListener
     public static void main(String[] args)
     {
         JFrame frame=new JFrame();
-        frame.add(new AnimationBasic());
+        frame.add(new csds());
         frame.setTitle("animation test");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500,300);
