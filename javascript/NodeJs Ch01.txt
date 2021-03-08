@@ -1,0 +1,41 @@
+1. 노드 시작하기
+
+자바스크립트 이해 : https://ko.javasript.info/
+
+1.1 핵심 개념 이해하기
+NodeJs 정의 : 
+    크롬 vs 자바스크립트 엔진으로 빌드 된 자바스크립트 런타임
+    Runtime - 실행 시간으로써의 환경
+    자바스크립트의 실행 환경
+    NodeJs 만든이 : Ryan Lienhart Dahl
+
+    자바로 비유하면 JVM, .NET프레임워크
+
+1.1.1 서버(Serve) : 
+서버 : 네트워크를 통해 클라이언트에 
+    정보나 서비스를 제공하는 컴퓨터 또는 프로그램
+
+클라이언트(Client) : 
+    사용자 PC, 모바일 기기, IOT 장비
+    서버에 서비스를 요청하는 컴퓨터나 프로그램
+    웹브라우저
+    
+
+클라이언트(client)는 서버(serve)에게 요청(request)한다.
+Serve는 Req 받으면 DataBase로 부터 Data를 가져온다.
+Data를 가져오면 Serve는 Client에게 응답(Response)한다.
+Client 부분을 Front-End
+Serve 부분을 Back-End
+
+
+NodeJs,React, view,앵골라 등 여러 언어가 있다.
+
+1.1.2 자바스크립트 런타임 : 
+    자바스크립트 실행 환경, 실행기
+    libuv : 논 블록킹 I/O, 이벤트 기반 처리
+    v8 : 자바스크립트 엔진(해석기)
+
+# 노드의 특징
+이벤트 기반
+논 블로킹 I/O
+싱글 스레드
