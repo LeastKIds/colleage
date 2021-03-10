@@ -135,3 +135,14 @@ Node Server는 Single Thread, NonBlocking --> 장단점 (특징이 비슷하다)
 장점 : 하나의 Thread에 많은 I/O 대응 (I/O의 횟수는 많고, Data 양은 적음)
         주로 실시간 채팅, 주식사이트, JSON Data 제공 API Server
 단점 : Single Thread라 관리가 필요함, Server의 규모가 커졌을 때 관리가 어려움
+
+2. 알아 두어야할 JavaScript : ES2015+ 문법
+    ES : ECEMAScript
+    ES2015 = ES6
+
+
+2.1 ES2015+
+2015년 발표 자바스크립트 표준 문법안 : 상당한 변화
+2016년 승인후 ES6
+
+Babel : 구형 브라우저에서 ES6 돌아가게 해주는 도구
