@@ -14,6 +14,7 @@ public class ComboBoxFrame extends JFrame implements ActionListener{
         this.setSize(300,200);
 
         String[] animals={"dog", "lion","tiger"};
+        JTextField field=new JTextField();
         JComboBox animalList=new JComboBox(animals);
         animalList.setSelectedIndex(0);
         animalList.addActionListener(this);

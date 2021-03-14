@@ -23,7 +23,7 @@ public class RadioButtonFrame extends JFrame implements ActionListener{
         this.add(topPanel,BorderLayout.NORTH);
 
         sizePanel=new JPanel();
-        small=new JRadioButton("Small Size");
+        small=new JRadioButton("Small Size",true);
         medium=new JRadioButton("Medium Size");
         large=new JRadioButton("Large Size");
 
