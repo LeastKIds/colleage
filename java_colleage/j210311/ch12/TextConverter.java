@@ -4,8 +4,6 @@ import org.json.*;
 import org.json.simple.parser.*;
 import com.google.gson.*;
 import io.github.cdimascio.dotenv.*;
-import io.github.cdimascio.dotenv.internal.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -104,8 +102,7 @@ public class TextConverter extends JFrame{
         JSONObject jObject=new JSONObject(s);
         JSONObject converter_1=jObject.getJSONObject("message").getJSONObject("result");
         String result=converter_1.getString("translatedText");
-        Dotenv dotenv=Dotenv.load();
-        System.out.println(dotenv.get("MY_ENV_VAR1"));
+        
         
         return result;
         
@@ -123,11 +120,7 @@ public class TextConverter extends JFrame{
 
     // 파파고 API
     public String getTransSentence(String s){
-        
-        
-        
-        String clientId = "B9OuNd5r8n4ayn_uqXHW";//애플리케이션 클라이언트 아이디값";
-        String clientSecret = "czX0zkzit0";//애플리케이션 클라이언트 시크릿값";
+        Dotenv dotenv=Dotenv.load();
 
         String apiURL = "https://openapi.naver.com/v1/papago/n2mt";
         String text;
@@ -138,14 +131,13 @@ public class TextConverter extends JFrame{
         }
 
         Map<String, String> requestHeaders = new HashMap<>();
-        requestHeaders.put("X-Naver-Client-Id", clientId);
-        requestHeaders.put("X-Naver-Client-Secret", clientSecret);
+        requestHeaders.put("X-Naver-Client-Id", dotenv.get("MY_ENV_VAR1"));
+        requestHeaders.put("X-Naver-Client-Secret", dotenv.get("clientSecret"));
 
         String responseBody = post(apiURL, requestHeaders, text);
         
 
         
-
         return responseBody;
         
     }

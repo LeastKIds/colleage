@@ -4,6 +4,7 @@
         "json-simple-1.1.1.jar",
         "json-20210307.jar",
         "gson-2.8.6.jar",
-        "java-dotenv-5.1.0.jar"
+        "java-dotenv-5.1.0.jar",
+        "dotenv-java-2.2.0.jar"
     ]
 }
