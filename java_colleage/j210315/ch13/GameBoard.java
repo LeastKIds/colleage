@@ -8,7 +8,7 @@ public class GameBoard extends JPanel implements KeyListener{
     Ball ball;
     Racquet racquet1;
     Racquet racquet2;
-    static PointLabel point;
+    static PointLabel point;        // 점수 판
 
     public GameBoard()
     {
@@ -48,8 +48,8 @@ public class GameBoard extends JPanel implements KeyListener{
         ball.move();
         racquet1.move();
         racquet2.move();
-        point.setPoint(ball.getPoint1(),ball.getPoint2());
-        point.setPointPanel();
+        point.setPoint(ball.getPoint1(),ball.getPoint2());  // 점수 라벨에 점수 대입
+        point.setPointPanel();  // 위에 점수로 점수표 바꾸기
     }
 
     @Override
@@ -72,7 +72,7 @@ public class GameBoard extends JPanel implements KeyListener{
         
         GameBoard game=new GameBoard();
         point=new PointLabel();
-        game.add(point, BorderLayout.NORTH);
+        game.add(point, BorderLayout.NORTH);    // 점수판 추가
         frame.add(game);
 
         // frame.revalidate();

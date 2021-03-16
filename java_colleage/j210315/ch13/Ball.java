@@ -25,36 +25,38 @@ public class Ball {
 
     void move()
     {
-        if(x<0)
+        //+speed 가 왜 붙는지 몰라서 다 뺐는데도 잘 돌아가는듯
+        if(x<0)     
         {
             //xSpeed=(1+speed);
-            reset();
-            point2++;
-            System.out.println("point2 : " + point2);
+            reset();                // 양쪽 벽에 공이 닿으면 게임이 초기화
+            point2++;               // 상대편에 점수 +1
+            //System.out.println("point2 : " + point2);
         }
             
         if(x>=game.getWidth() - 2*RADIUS)
         {
             //xSpeed=-(1+speed);
-            reset();
-            point1++;
-            System.out.println("point1 : " + point1);
+            reset();                // 양쪽 벽에 공이 닿으면 게임이 초기화
+            point1++;               // 상대편에 점수 +1;
+            //System.out.println("point1 : " + point1);
         }
             
         if(y<0)
         {
-            ySpeed=-(ySpeed);
-            System.out.println("y + ySpeed<0");
+            ySpeed=-(ySpeed);       // y가 반대로 움직이는 거라서 부호만 바꿔줌
+            //System.out.println("y + ySpeed<0");
         }
            
         if(y>= game.getHeight() -2*RADIUS)
         {
-            ySpeed=-(ySpeed);
-            System.out.println("y + ySpeed > game.getHeight() -2*RADIUS");
+            ySpeed=-(ySpeed);       // y가 반대로 움직이는 거라서 부호만 바꿔줌
+            //System.out.println("y + ySpeed > game.getHeight() -2*RADIUS");
         }
             
         if(collision())
         {
+            // 서로의 막대기에 공이 닿았을때 공의 속력을 높여줌
             if(xSpeed>=0)
                 xSpeed-=speed;
             else
@@ -65,11 +67,11 @@ public class Ball {
             else
                 ySpeed-=speed/2;
             
-            speed++;
+            
+            speed++;        // 속력이 점점 증가
             
         }
-        System.out.println(speed);
-        System.out.println();
+        
         x = x+xSpeed;
         y = y+ySpeed;
     }
@@ -99,6 +101,7 @@ public class Ball {
         speed=1;
     }
 
+    // 점수판에 쓰일 점수를 호출하는 메소드
     int getPoint1()
     {
         return point1;

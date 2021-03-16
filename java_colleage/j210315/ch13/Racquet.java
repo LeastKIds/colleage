@@ -21,7 +21,7 @@ public class Racquet {
         this.x=x;
         this.y=y;
         this.color=color;
-        this.racekt=racket;
+        this.racekt=racket; // 라켓 1,2를 구분하기 위해
     }
 
     public void move()
@@ -41,7 +41,7 @@ public class Racquet {
         ySpeed=0;
     }
 
-    public void keyPressed(KeyEvent e)
+    public void keyPressed(KeyEvent e)  // 키보드를 눌렀을 시라켓 1은 1번으로 라켓 2는 2번으로만 작동하도록 해 따로 작동하도록 만듬
     {
         if(racekt==1)
         {

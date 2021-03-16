@@ -4,10 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class PointLabel extends JLabel{
+//점수판 라벨
+public class PointLabel extends JLabel{ 
     
     private int point1=0;
-    private int point2=0;
+    private int point2=0;   // 혹시 초기화가 안된다는 오류가 뜰까봐 0으로 초기화
     public PointLabel()
     {
 
@@ -21,6 +22,7 @@ public class PointLabel extends JLabel{
         
     }
 
+    // 점수판 바꿔주는 메소드
     void setPointPanel()
     {
         this.setText(point1 + " : " + point2);
