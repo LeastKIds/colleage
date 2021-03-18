@@ -116,7 +116,7 @@ public class TextConverter extends JFrame{
         JSONObject jObject=new JSONObject(s);               //  s : 해석할 문장 , s를 JSONObject파일로 변환, s는 위의 주석처리된 문장
         JSONObject converter_1=jObject.getJSONObject("message").getJSONObject("result");    // 위에 설명한 대로 message 결과 값중 result 괄호안에 있는 결과 값을 가져옴
         String result=converter_1.getString("translatedText");  // result 결과 값중에서도 우리가 필요한 translatedText 결과 값을 가져옴. 큰따음표나 : 등은 알아서 걸러줌
-
+        System.out.println(jObject.getJSONObject("message"));
         return result;  // 최종 번역 문장
         
         
@@ -144,14 +144,17 @@ public class TextConverter extends JFrame{
         }
 
         Map<String, String> requestHeaders = new HashMap<>();
-        requestHeaders.put("X-Naver-Client-Id", dotenv.get("MY_ENV_VAR1"));
-        requestHeaders.put("X-Naver-Client-Secret", dotenv.get("clientSecret"));
+        requestHeaders.put("X-Naver-Client-Id", dotenv.get("MY_ENV_VAR1")); // 파파고 사이트에서 얻어온 아이디
+        requestHeaders.put("X-Naver-Client-Secret", dotenv.get("clientSecret"));    // 파파고 사이트에서 얻어온 비밀번호
 
         String responseBody = post(apiURL, requestHeaders, text);
         
 
         
-        return responseBody;
+        return responseBody;    // 제이슨 파일로 넘어오는 번역 문장
+                                // api의 다른 부분은 꼭 이해할 필요는 없고
+                                // 이 메소드에서 s라는 문장을 주면 
+                                // responseBody라는 String 변수로 번역값을 준다는 것만 알면 된다
         
     }
 
