@@ -10,8 +10,8 @@ public class Calculator extends JFrame implements ActionListener {
     private JPanel panel;
     private JTextField display;
     private JButton[] buttons;
-    private String[] labels={"Backspace","","","CE","C","7","8","9","/","sqrt","4","5","6","x","%","1","2",
-                                "3","-","1/x","0","-/+",".","="};
+    private String[] labels={"Backspace","","","CE","C","7","8","9","/","sqrt","4","5","6","*","%","1","2",
+                                "3","-","1/x","0","-/+",".","+","="};
     
     private double result=0;
     private String operator="=";
@@ -51,7 +51,7 @@ public class Calculator extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         String command=e.getActionCommand();
-        if(command.charAt(0)=='C')      // charAt(0) 문자의 첫 번째
+        if(command.charAt(0)=='C')      // charAt(0) 문자의 0번 째 (첫 번째)
         {
             startOfNumber=true;
             result=0;
@@ -79,7 +79,46 @@ public class Calculator extends JFrame implements ActionListener {
                 else
                     operator=command;
             }
+            else
+            {
+                double x=Double.parseDouble(display.getText());
+                calculate(x);
+                operator=command;
+                startOfNumber=true;
+            }
         }
+    }
+
+    private void calculate(double n)
+    {
+        
+        if(operator.equals("+"))
+        {
+            result +=n;
+            System.out.println("+");
+        }
+            
+        else if(operator.equals("-"))
+            result -=n;
+        else if(operator.equals("*"))
+        {
+            System.out.println("*");
+            result *=n;
+        }    
+        else if(operator.equals("/"))
+            result /=n;
+        else if(operator.equals("="))
+            result =n;
+        
+            
+        
+        display.setText("" + result);
+        
+    }
+
+    public static void main(String[] args)
+    {
+        Calculator s=new Calculator();
     }
     
 }

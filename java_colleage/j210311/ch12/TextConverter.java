@@ -1,8 +1,8 @@
 package j210311.ch12;
 
 import org.json.*;
-import org.json.simple.parser.*;
-import com.google.gson.*;
+// import org.json.simple.parser.*;
+// import com.google.gson.*;
 import io.github.cdimascio.dotenv.*;
 import javax.swing.*;
 import java.awt.*;
@@ -97,13 +97,28 @@ public class TextConverter extends JFrame{
         // String s_1=s;
         // int idx1=s_1.indexOf("translatedText");
         // int idx2=s_1.indexOf("engineType");
-        //return s_1.substring(idx1+17,idx2-3);
+        //  return s_1.substring(idx1+17,idx2-3);
         
+        //{"message":
+        //        {"@type":"response",
+        //          "@service":"naverservice.nmt.proxy",
+        //          "@version":"1.0.0",
+        //          "result":
+        //                  {"srcLangType":"ko",
+        //                  "tarLangType":"en",
+        //                  "translatedText":"Kim Jin Hong",
+        //                  "engineType":"N2MT",
+        //                  "pivot":null}}}
+        //
+        // XXXX : AAAA 면 getString(XXXX)로 AAAA를 가져올 수 있고
+        // XXXX : {...} 면 getJSONObject(XXXX)로 {...} 안의 결과 값들을 가져 올 수 있다.
+
         JSONObject jObject=new JSONObject(s);
         JSONObject converter_1=jObject.getJSONObject("message").getJSONObject("result");
         String result=converter_1.getString("translatedText");
         
-        
+        System.out.println(s);
+        System.out.println(converter_1);    
         return result;
         
         
