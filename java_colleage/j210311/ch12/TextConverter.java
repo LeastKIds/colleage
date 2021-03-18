@@ -113,13 +113,11 @@ public class TextConverter extends JFrame{
         // XXXX : AAAA 면 getString(XXXX)로 AAAA를 가져올 수 있고
         // XXXX : {...} 면 getJSONObject(XXXX)로 {...} 안의 결과 값들을 가져 올 수 있다.
 
-        JSONObject jObject=new JSONObject(s);
-        JSONObject converter_1=jObject.getJSONObject("message").getJSONObject("result");
-        String result=converter_1.getString("translatedText");
-        
-        System.out.println(s);
-        System.out.println(converter_1);    
-        return result;
+        JSONObject jObject=new JSONObject(s);               //  s : 해석할 문장 , s를 JSONObject파일로 변환, s는 위의 주석처리된 문장
+        JSONObject converter_1=jObject.getJSONObject("message").getJSONObject("result");    // 위에 설명한 대로 message 결과 값중 result 괄호안에 있는 결과 값을 가져옴
+        String result=converter_1.getString("translatedText");  // result 결과 값중에서도 우리가 필요한 translatedText 결과 값을 가져옴. 큰따음표나 : 등은 알아서 걸러줌
+
+        return result;  // 최종 번역 문장
         
         
         
