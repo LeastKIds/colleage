@@ -58,11 +58,13 @@ public class Ball {
             
         if(collision())
         {
-            // 서로의 막대기에 공이 닿았을때 공의 속력을 높여줌
+            // 서로의 막대기에 공이 닿았을때 공의 속력을 높여줌 
+
+            xSpeed = -(xSpeed);
             if(xSpeed>=0)
-                xSpeed-=speed;
-            else
                 xSpeed+=speed;
+            else
+                xSpeed-=speed;
             
             if(ySpeed>=0)
                 ySpeed+=speed/2;

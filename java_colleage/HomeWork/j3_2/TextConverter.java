@@ -95,11 +95,13 @@ public class TextConverter extends JFrame{
 
     public String subStringResult(String s)
     {
+        //JSON 없이
         // String s_1=s;
         // int idx1=s_1.indexOf("translatedText");
         // int idx2=s_1.indexOf("engineType");
         //  return s_1.substring(idx1+17,idx2-3);
         
+        //JSON 있이
         //{"message":
         //        {"@type":"response",
         //          "@service":"naverservice.nmt.proxy",
