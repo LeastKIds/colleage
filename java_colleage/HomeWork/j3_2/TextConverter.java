@@ -1,4 +1,5 @@
-package j210311.ch12;
+package HomeWork.j3_2;
+
 
 import org.json.*;
 // import org.json.simple.parser.*;
@@ -112,6 +113,18 @@ public class TextConverter extends JFrame{
         //
         // XXXX : AAAA 면 getString(XXXX)로 AAAA를 가져올 수 있고
         // XXXX : {...} 면 getJSONObject(XXXX)로 {...} 안의 결과 값들을 가져 올 수 있다.
+        // ex) XXX= "AAAA" : {
+        //                      "BBBB" : "안녕1"
+        //                      "CCCC" : {
+        //                                  "DDDD" :  "안녕2"     
+        //                               }
+        //                    }
+        //  XXXX.getJSONObject("AAAA") = "BBBB" : "안녕1"
+        //                                "CCCC" : {
+        //                                           "DDDD" :  "안녕2"     
+        //                                         }
+        // XXXX.getJSonObject.("AAAA").getString("BBBB") = "안녕1"
+        // XXXX.getSJonObject.("AAAA").getOject("CCCC") = "DDDD" :  "안녕2"
 
         JSONObject jObject=new JSONObject(s);               //  s : 해석할 문장 , s를 JSONObject파일로 변환, s는 위의 주석처리된 문장
         JSONObject converter_1=jObject.getJSONObject("message").getJSONObject("result");    // 위에 설명한 대로 message 결과 값중 result 괄호안에 있는 결과 값을 가져옴
@@ -218,6 +231,7 @@ public class TextConverter extends JFrame{
 }
 
     
+
 
 
 
