@@ -359,4 +359,164 @@ Human.isHuman(newZero);
         다음 then은 위의 promise return 값을 받아옴
 
 *콜백을 프로미스로 변경
+    - 콜백
+    - 프로미스
 
+    - 프로미스 사용 X
+function findAndSaveUser(Users)
+{
+    Users.findOne({}, (err, user) => {
+        if(err)
+        {
+            return console.error(err);
+        }
+    }
+
+        user.name='zero';
+        user.save((err) =>{
+            if(err)
+            {
+                return console.error(err);
+            }
+
+            User.findOne({gender : 'm' }, (err,user) =>{
+
+            }
+            
+            );
+        }
+        
+        );
+    
+    );
+}
+
+    - 프로미스 사용 O
+function findAndSaveUser(Users){
+    Users.findOne({})   // findOne() - 프로미스 객체 리턴
+    .then((user) =>{
+        user.name='zero';
+        return user.save(); // save() - 프로미스 객체 리턴
+    })
+    .then((user) => {
+        return User.findOne({gender : 'm'});
+    })
+    .then((user) =>{
+        // 생략
+    })
+    .catch(err => {
+        console.error(err);
+    });
+}
+
+* 여러개의 프로미스 한꺼번에 실행하기
+ : Promise.all() - 전체 메소드를 객체 생성하지 않고 실행
+    하나라도 실패하면 catch로 감
+
+ const promise1=Promise.resolve('성공1');
+ const promise2=Promise.resolve('성공2');
+ // Promise.resolve() : 즉시 resolve하는 프로미스 객체 생성
+ // Promise.reject() : 즉시 reject하는 프로미스 객체 생성
+ Promise.all([promise1,promise2])
+ .then((result) => {
+     console.log(result); // ['성공1','성공2'];
+ })
+ .catch((error) =>{
+     console.error(error);
+ });
+
+ 2.1.8 async/await : ES2017부터, Node 7.6 부터 지원
+    - ES6+/ES2015+
+    - 프로미스가 콜백헬을 극복하고 있지만, 코드의 장황성은 해소하지 못함
+
+    - 프로미스 
+
+    function findAndSaveUser(Users){
+        Users.findOne({})   // findOne() - 프로미스 객체 리턴
+        .then((user) =>{
+            user.name='zero';
+            return user.save(); // save() - 프로미스 객체 리턴
+        })
+        .then((user) => {
+            return User.findOne({gender : 'm'});
+        })
+        .then((user) =>{
+            // 생략
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
+
+    1) function을 async function으로 변경
+    function findAndSaveUser(Users)
+    {
+
+    }
+    =>
+    async function findAndSaveUser(Users){
+    }
+
+    2) 프로미스 객체 반환 함수들에 호출
+    변수 = await 함수명();
+
+    async function findAndSaveUser(Users){
+        try{
+            let user=await Users.findOne({});
+            user.name='zero';
+            user=await user.save();
+            user=await Users.findOne({gender : 'm'});
+            // 생략
+        }catch(error){
+            console.error(error);
+        }
+    }
+
+    화살표 함수도 async/await 사용 가능
+
+    * async 함수는 항상 Promise 객체를 반환
+    async function findAndSaveUser(Users){
+        // ...
+        return enw Promise({...});
+    }
+
+    findAndSaveUser().then(() =>{
+
+    });
+
+    async function other(){
+        const res=await.findAndSaveUser();
+    }
+
+    지금까지는 주로 서버용
+
+2.2 Front-End JS
+: html내의 script 태그 안에 작성되어 실행되는 JS코드
+DOM, BOM, aJax 
+DOM : Document Object Model : html 소스코드를 객체로 만들어
+                            document 객체로 관리
+            - elements : html, head, body (태그)등등, 노드(node, NodeJs 아님)
+            - attribute  : 시작 택에 있는 속성
+                    ex) a태그의 href
+            - getElementById
+            - getElementsById
+            - getElementsByClassName
+            - querySelector, querySelectorAll
+            (위의 것들은 요즘에는 잘 사용 안 함, UI 프로그램으로 만듬)
+
+BOM : Browser Object Model : window 객체, document객체 , location 객체 history 객체...
+            - location.href = '주소'
+            - redirection 기능 구현시 사용
+
+2.2.1 aJax
+    - Asynchronous JavaScript and XML (비동기 자바스크립트와 XML)
+        웹페이지 전환없이 새로운 데이터를 불러와서
+        화면에 변화를 부분적으로 하게 하는 기능
+    - Web 2.0 시대 도래
+    - MashUp(여러 곳에서의 서비스를 가져와서 내 홈페이지에 구현), OpenAPI 
+
+    - aJax 요청~응답 라이브러리
+     XMLHttpRequest 객체 : 표준
+     fetch()
+     fetch 이전에 $.ajax() ===> jQuery 에 있던 기능
+     axios() : 프로미스, async/await 잘 지원
