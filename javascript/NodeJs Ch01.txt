@@ -198,7 +198,7 @@ var oldObject = {   // 객체 리터럴 사용 초기화
     sayNode : sayNode,
 };
 oldObject[es+6]='Fantastic';
-oldObject.saYNode='test';
+oldObject.sayNode='test';
 oldObject.sayJS();
 console.log(oldObject.ES6);
 
@@ -271,7 +271,7 @@ var Human=function(type)    // function - Function 객체
 
 Human.isHuman=function(human)    // isHuman이라는 메소드가 된다
 {
-    return human instanceOf Human;  //instanceOf는 앞에있는 것이 뒤에있것에 있는 것인가
+    return human instanceOf Human;  //instanceOf는 뒤쪽이 앞쪽을 포함하고 있는가
 };  // h.isHuman(man);
 
 Human.prototype.breathe=function()
