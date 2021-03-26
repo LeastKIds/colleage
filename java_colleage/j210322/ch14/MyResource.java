@@ -9,7 +9,7 @@ public class MyResource implements AutoCloseable{
         else throw new Exception("오류가 발생했지 뭐야...");
     }
     @Override
-    public void close() throws Exception {
+    public void close() {
         // TODO Auto-generated method stub
         System.out.println("MyResource closed...");
     }
