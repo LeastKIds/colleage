@@ -10,6 +10,6 @@ public class BoxInteger {
 
     public int getValue()
     {
-        return=value;
+        return  value;
     }
 }

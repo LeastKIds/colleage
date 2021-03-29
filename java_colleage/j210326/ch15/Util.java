@@ -45,5 +45,13 @@ public class Util {
 
         System.out.println("sum : " + sum);
     }
-        
+
+    public static void printSum3(List<Number> list){            //  List<Number> list=new ArrayList<Integer>
+        Double sum=0.0;                                         //  안 됨. Number와 Integer 과는 부모 자식이지만
+        for(Number val : list) sum +=val.doubleValue();         //  List와 ArrayList가 부모자식이 아니라 할 수 없다.
+
+        System.out.println("sum : " + sum);
+    }
+    
+    //  List 대신 ArrayList도 안 됨.
 }

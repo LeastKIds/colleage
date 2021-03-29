@@ -18,5 +18,6 @@ public class UtilTest {
         // Util.printValueOf5Times(12);
 
         Util.printSum2(Arrays.asList(arr));
+        //Util.printSum3(arr);          //  List와 ArrayList는 아무 관계가 아님
     }
 }
