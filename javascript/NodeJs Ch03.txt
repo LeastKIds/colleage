@@ -79,3 +79,80 @@ JS의 실행환경
     clearTimeout(아이디)
     clearInterval(아이디)
     clearImmediate(아이디)
+
+
+    setImmediate(콜백) VS setTimeout(콜백,0)
+    --->
+    기본 적으로는 setImmediate가 먼저 실행 되지만 항상 그런 것은 아니다.
+    setTimeout(콜백,0)을 사용하지 않는 것을 권함(실행 순서가 꼬일 수 있음)
+
+3.4.4 __filename, __dirname
+
+__filename : 실행 할 때 현재 실행중인 파일 명
+__dirname : 실행 할 때 현재 실행중인 폴더명(디렉토리 명)
+경로를 포함 하여 표시.
+
+* 경로 구분자
+윈도우 : \
+맥,리눅스 : /
+
+3.4.5 module, exports, require
+    * JS에서 함수는 Function형 객체
+    * 모듈 작성 : module.exports (global.module.exports)
+    * 모듈작성 추가 방법 : exports (global.exports)
+
+    exports ==> module.exports ==> {} // 실제 모듈
+
+    * module.exports으로 모듈 작성 권장
+
+    * 노드에서의 this 의미
+        - 최상위 스코프(전역 스코프)의 this : module.exports와 exports 객체를 의미
+        - 함수 내의 this : global 객체, JS함수 ---> Function형 객체
+    
+    * require() : 함수 ---> Function형 객체
+        - require.cash
+        - require.main
+
+    * require() 주의사항
+        - 상호 의존관계인 경우 주의가 필요 (dependency 문제 발생)
+        - ctrl + F2 : 같은 내용 한꺼번에 바꾸기 (refactoring)
+
+3.4.6 process
+
+node.exe.가 메인메모리에 로딩되어 실행되고 있는 것을 프로세스
+
+    - process.arch : 프로세서 아키텍쳐 정보
+                        arm, ia32
+    - process.version : node의 버전
+    - process.platform : os의 플랫폼 정보
+                        linux, darwin, freebsd
+    - process.pid : 프로세스의 index
+    - process.uptime() : 프로세스가 시작된 후의 흐른 시간
+    - process.cwd() : 프로세스 실행되는 경로
+        cwd : current working directory
+    - process.cpuUsage() : 프로세스의 CPU 사용량을 의미
+
+3.4.6.1 process.env
+env : environment(환경)
+process.env에 환경정보를 저장해 두고
+그 정보를 실행시 사용한다.
+주로 공개되지 말아야 할 정보를 담아둔다.
+(DB의 아이디, 패스워드)
+
+3.4.6.2 process.nextTick(콜백)
+    * 즉시 실행 방법
+        1) setTimeout(콜백,0)
+        2) setImmediate(콜백)
+        3) process.nextTick(콜백)
+        4) promise.resolve()의 콜백
+        3),4)번 제일 먼저 실행 : microtask
+    * 주의사항 : microtask 내부에서 재귀 호출 금지(권고)
+
+3.4.6.3 process.exit(코드)
+    : 프로세스를 종료 시킴
+    0 : 정상 종료
+    1이상 : 비정상 종료
+
+3.5 노드 내장 모듈 사용하기
+https://nodejs.org/dist/latest-v14.x/docs/api/
+참고
