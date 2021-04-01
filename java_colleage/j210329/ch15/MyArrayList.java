@@ -40,7 +40,7 @@ public class MyArrayList <T> implements Iterable{
     public void add(T value, int idx)
     {
         //  만약 공간이 부족할 경우 확장, 위의 add와 똑같다.
-        if(size>capacity)
+        if(size>=capacity)
         {
             int incresedCapacity = (int)(capacity * 1.5);
             T[] tempArray=(T[]) new Object[incresedCapacity];
@@ -50,20 +50,29 @@ public class MyArrayList <T> implements Iterable{
         }
 
         
-        T[] addArray=(T[]) new Object[capacity];    // 배열을 자르고 뒷 부분을 저장할 배열 생성
-        System.arraycopy(array, idx, addArray, 0, capacity-idx);    // array의 idx 부분 부터 addArray의 0 번째 부분부터 array의 capacity-idx 길이 만큼 복사
-        array[idx]=value;   // array의 idx 부분에 value 값으로 수정
-        int addArrayN=0;    // 아래의 addArray 배열의 위치를 하나씩 옮겨줄 변수
+        // T[] addArray=(T[]) new Object[capacity];    // 배열을 자르고 뒷 부분을 저장할 배열 생성
+        // System.arraycopy(array, idx, addArray, 0, capacity-idx);    // array의 idx 부분 부터 addArray의 0 번째 부분부터 array의 capacity-idx 길이 만큼 복사
+        // array[idx]=value;   // array의 idx 부분에 value 값으로 수정
+        // int addArrayN=0;    // 아래의 addArray 배열의 위치를 하나씩 옮겨줄 변수
+
+        
 
 
-        //  array의 value값이 들어간 idx 다음 부분인 idx+1 부분 부터 addArray에 저장된 나머지 뒷 부분을 넣어 주는 작업
-        for(int i=idx+1; i<idx+(capacity-idx); i++)
-        {
-            array[i]=addArray[addArrayN];
-            addArrayN++;
-        }
+        // //  array의 value값이 들어간 idx 다음 부분인 idx+1 부분 부터 addArray에 저장된 나머지 뒷 부분을 넣어 주는 작업
+        // for(int i=idx+1; i<idx+(capacity-idx); i++)
+        // {
+        //     array[i]=addArray[addArrayN];
+        //     addArrayN++;
+        // }
+
+        // 교수님 방법
+        for(int i=capacity-1; i>=idx; i--)
+            array[i+1]=array[i];
+        
+        array[idx]=value;
 
         size++;     // 값이 하나 추가 됬으니 size도 1 증가
+
 
     }
 
@@ -78,12 +87,15 @@ public class MyArrayList <T> implements Iterable{
     // array 배열 표시 부분
     public void showArray()
     {
-        for(int i=0; i<array.length; i++)
-        {
-            if(array[i] ==null)
-                break;
-            System.out.print(array[i] + " ");
-        }
+        if (array[0]==null)
+            System.out.println("null");
+        else
+            for(int i=0; i<array.length; i++)
+            {
+                if(array[i] ==null)
+                    break;
+                System.out.print(array[i] + " ");
+            }
             
     }
     @Override

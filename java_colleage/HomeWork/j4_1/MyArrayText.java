@@ -5,6 +5,8 @@ public class MyArrayText {
     {
         MyArrayList<Integer> list1=new MyArrayList<>();
 
+        list1.showArray();
+
         for(int i=1; i<=100; i++)
         {
             list1.add(i);
@@ -17,7 +19,7 @@ public class MyArrayText {
 
         // list1.showArray();
 
-        list1.remove(10);
+        list1.remove(1);
 
         list1.showArray();      // 중간에 삭제하는 메소드
 
