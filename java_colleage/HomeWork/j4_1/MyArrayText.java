@@ -1,4 +1,4 @@
-package j210329.ch15;
+package HomeWork.j4_1;
 
 public class MyArrayText {
     public static void main(String[] args)
