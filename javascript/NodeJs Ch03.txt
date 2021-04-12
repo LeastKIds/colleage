@@ -237,3 +237,67 @@ https://nodejs.org/dist/latest-v14.x/docs/api/
                                         false -> worker가 된다
 
 3.5.8 child_process (알면 좋지만 잘 쓰진 않는다)
+    - 노드에서 다른 프로그램을 실행하고 싶거나 명령어를 수행하고 싶을 때 사용하는 모듈
+
+3.6 파일시스템(FS) 접근하기
+    - File system ---> fs모듈
+    - 비 동기 방식
+    - 간단 읽기, 쓰기 예제 / 읽기 : readFile / 쓰기 : writeFile
+    - promise 버전이 있다.
+
+3.6.1 동기메서드와 비동기 메서드
+    * 비동기와 동기 구별법
+    함수명 : 비동기
+    함수명 + sync : 동기
+
+3.6.2 Buffer & Stream
+    Buffer : 완충
+    Stream : 시냇물, 시냇물의 흐름
+
+    - 파일처리 방식 : 2가지
+        1) 버퍼이용 : default (따로 지정하지 않으면 버퍼방식)
+        2) 스트림 이용
+
+    * 버퍼링, 스트리밍
+        - 영상을 로딩할 때, 버퍼링
+        - 영상을 실시간으로 할 때, 스트리밍
+
+    - 스트리밍 할 때 버퍼링을 사용한다.
+
+    * 노드에서 파일 처리 할 때 동작
+        - 파일을 읽을 때 메모리에 파일 크기만큼 공간을 마련
+        - 파일 데이터를 메모리에 저장 -> 파일 처리(읽기, 수정하기, 삭제, 쓰기)
+
+    * 노드에서 버퍼를 사용하기 위해 Buffer 객체를 사용
+        - 문제점 : 대용량의 파일 처리
+                    메모리 확보 문제
+    * 스트림 사용하려면 Stream 객체 사용 (ReadStream, WriteStream)
+        - 버퍼의 메모리 확보 문제를 어느정도 해결 하기 위해
+        - 대용량의 파일을 일정한 크기로 잘라서 해결
+        - 일정한 크기로 자른것 : chunk
+        - createReadStream
+        - createWriteStream
+
+3.6.4 스레드풀 알아보기
+    Thread pool(스레드를 모아놓은 곳)
+
+    - 내부적으로 스레드 풀 이용하는 모듈 : fs모듈, crypto모듈, zlib모듈, dns.lookup 등등
+
+    - SET UV_THREADPOOL_SIZE=1 (스레드풀을 한개로 제한) 하면 순서대로 실행됨.
+
+    process.env.UV_THREADPOOL_SIZE js에 적어보면 몇개가 이용되는지 보여줌 
+
+3.7 이벤트 이해하기
+    * on(이벤트명, 콜백) : addListener(이벤트명, 콜백)와 같음
+        once(이벤트명, 콜백) : 1회 실행
+        on의 경우 같은 이벤트명이 있을 경우 모두 실행
+    * emit(이벤트명) : 이벤트 발생 시키기
+
+3.8 예외 처리하기
+    * try{}catch{
+        throw new Error('에러 원인 설명'); // try catch 로도 해결 못하면 여기로 보내버린다.
+    }
+    * throw
+    * console.error();
+
+3.8.1 자주 발생하는 에러들
