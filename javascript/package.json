@@ -1,17 +1,20 @@
 {
-  "name": "package",
-  "version": "1.0.0",
-  "description": "WDJ",
-  "main": "index.js",
+  "name": "learn-express",
+  "version": "0.0.1",
+  "description": "익스프레스를 배우자",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./210503/app"
   },
-  "keywords": [
-    "WDJ"
-  ],
   "author": "Kim",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2"
   }
 }

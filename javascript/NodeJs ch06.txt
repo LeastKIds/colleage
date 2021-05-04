@@ -35,4 +35,58 @@ MVC 모델
 log 처리 관련
 
 GET                     /                   500             7.408ms -   50
-요청 메소드             요청 주소            
+요청 메소드             요청 주소   
+
+6.3  Router객체로 라우팅 분리하기
+app.js가 서비스가 많아짐에 따라
+길어진다. ---> router로 분리처리하도록 한다.
+
+- router는 미들웨어의 종류중 하나
+
+- app.js에서 app.get(), app.post() --> 라우터 메소드
+1) routes/index.js
+2) routes/user.js
+
+* app.js에 라우터 설정
+252p 참고
+
+* 라우터 실행 중에 next('route')
+ : 한 url에 설정된 다른 라우터를 스킵
+
+ * 사용자로부터 주소를 요청 정보 전달
+  : 정규 표현식 (Reqular Expression)
+  - /user/:id -- /user/123
+    --> req.params.id --- 123값을 가짐
+    - user/:name
+        --> req.params.name
+    - /user/:id?key1=val1&key2=val2
+        --> req.params.id : 123
+            req.query => {key1:val1, key2:val2}
+    - /user/xxx 라우터보다 뒤에 작성해야 함
+
+    - 동일 url에 메소드 다른 경우
+    router.route('/abc')
+    .get((req,res) => {
+        res.send('Get /abc');
+    })
+    .post((req,res) =>{
+        res.send('POST /abc');
+    })
+    .patch()
+    .delete()
+
+
+6.5.2 넌적스(Numjucks) : 파이어폭스를
+작성한 모질라 재단
+html 문법을 기반
+
+
+6.5.2.4 include
+: 포함하다
+* include 파일 경로
+
+6.5.2.5 extends 와 block
+extends : 확장하다
+block : for { } : for문 블록
+
+레이아웃 파일 정의하고
