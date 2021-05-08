@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        <li data-id="1" data-user-job="programmer">1번</li>
+        <li data-id="2" data-user-job="designer">2번</li>
+        <li data-id="3" data-user-job="programmer">3번</li>
+        <li data-id="4" data-user-job="ceo">4번</li>
+    </ul>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        //여기 코딩 가능
+        // axios.get("https://www.zerocho.com/api/get")        // get : 주로 검색하거나 정보를 읽어서 가져오는 메소드
+        // .then(                                              
+        //     (result) => {
+        //         console.log(result);                        // GET방식으로 요청한 응답 결과
+        //         console.log(result.data);                   // 응답 결과중 전송받을 데이터, JSON 형태
+        //     }
+        // ).catch(
+        //     (err) => {
+        //         console.error(err);
+        //     }
+        // );
+
+        /* (
+            async () => {       // async 화살표 함수 정의, 익명함수(이름이 없어서)
+                try{
+                    const result=await axios.get("https://www.zerocho.com/api/get");
+                    console.log(result);
+                    console.log(result.data);
+                    alert(result.request.status==200? '성공했어요' : '실패');
+                }catch(error){
+                    console.error(err);
+                }
+            }
+        )();    // 익명 함수 호출 괄호가 가장 먼저 실행 되기 때문에 그 다음에 바로
+                // 그 함수를 호출시킴 */
+           /*  (
+                async () => {
+                    try{
+                        const result=await axios.post("https://www.zerocho.com/api/post/json",{
+                            name : 'zerocho',
+                            birth : 1994,
+                        });
+                        console.log(result);
+                        console.log(result.data);
+                    }catch(error){
+                        console.log(error);
+                    }
+                    
+                    
+                }
+            )(); */
+
+        /* const formData=new FormData();
+        formData.append('name','김진홍');  // 첫번째 - 키(key), 두번 째 - 값
+        formData.append('item','오렌지');   // append 는 추가
+        formData.append('item','멜론');
+        formData.has('item');              // item이 있는지 boolean 리턴함
+        formData.has('money');
+        formData.get('item');               // 맨 처음 오렌지만 나옴
+        formData.getAll('item');            // 멜론까지 다 나옴
+        formData.append('test',['하이','김진홍']);
+        formData.get('test');
+        formData.set('item','apple');       // set은 기존의 것이 없어지고 새로 추가
+        formData.getAll('item'); */
+
+        /* (async () => {
+            try{
+                const formData=new FormData();
+                const name = document.querySelector('imput');
+                formData.append('name',name);
+                formData.append('name','kim');
+                formData.append('birth',1997);
+
+                const result = await axios.post(
+                    "https://www.zerocho.com/api/post/json",
+                    formData
+                );
+
+                console.log(result);
+                alert(result.request.status=200? '성공' : '실패');
+                console.log(result.data);
+            }catch(error)
+            {
+                console.error(error);
+            }
+        })(); */
+
+        /* (async () => {
+            try{
+
+                const result = await axios.get(
+                    "https://www.zerocho.com/api/search/${encodeURIComponent('노드')}");
+
+                console.log(result);
+                alert(result.request.status=200? '성공' : '실패');
+                console.log(result.data);
+            }catch(error)
+            {
+                console.error(error);
+            }
+        })(); */
+
+        console.log(document.querySelector('li').dataset);  // 맨 처음 만 나옴
+        console.log(document.querySelectorAll('li'));       // 다 나옴
+        console.log(document.querySelectorAll('li')[2].dataset);    // [?] 해당 번호의 값을 가져옴  
+        console.log(document.querySelectorAll('li')[3].dataset.monthSalary=1000);
+
+    </script>
+
+    
+</body>
+</html>

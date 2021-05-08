@@ -1,0 +1,27 @@
+package com.example.controllflowfor
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        for(index in 1..10)
+            Log.d("For","현재 숫자는 ${index}")
+
+        var array=arrayOf("JAN","FEB","MAR","APR","MAY","JUN")
+        for(index in 0 until array.size)
+            Log.d("For","현재 월은 ${array.get(index)}")
+        for(index in 0..10 step 3)
+            Log.d("For","감소시키기 : ${index}")
+
+        for(index in 10 downTo 0 step 3)
+            Log.d("For","건너뛰면서 감소시키기 : ${index}")
+
+        for(month in array)
+            Log.d("For","현재 월은 ${month}")
+    }
+}
