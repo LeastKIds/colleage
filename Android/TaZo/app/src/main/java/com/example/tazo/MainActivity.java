@@ -11,6 +11,8 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     private Button chatting;
+    private Button loginPage;
+    private Button testPage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +25,25 @@ public class MainActivity extends AppCompatActivity {
         chatting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,Chatting.class);
+//                Intent intent = new Intent(MainActivity.this,Chatting.class);
+//                startActivity(intent);
+            }
+        });
+
+        loginPage = findViewById(R.id.loginPage);
+        loginPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,LoginPage.class);
+                startActivity(intent);
+            }
+        });
+
+        testPage=findViewById(R.id.testPage);
+        testPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Test.class);
                 startActivity(intent);
             }
         });

@@ -3,9 +3,13 @@ package project.TaZo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.text.DateFormat.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +45,7 @@ class EachClientThread extends Thread {
 			// getOutputStream : 출력 스트림 받아오기.
 			// 이걸로 채팅 하는 사람을 구분하는 값을 가져옴.
 			// 그 값을 list에 넣어서 보관.
-			writer = new PrintWriter(socket.getOutputStream());		// PrintWriter는 데코레이터 없이 OutPutStream을 받을 수 있음
+			writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),StandardCharsets.UTF_8));		// PrintWriter는 데코레이터 없이 OutPutStream을 받을 수 있음
 			list.add(writer);										// 데코레이터? : 함수에 추가적인 기능을 붙이는 것. Override에 super를 붙이는것과 같음?(솔직히 잘 모르겠음)
 
 
@@ -60,9 +64,10 @@ class EachClientThread extends Thread {
 	@Override
 	public void run() {
 		String name = null;
-
+		String str = null;
+		
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(),StandardCharsets.UTF_8));
 			/*
 				socket.getInputStream : 소켓을 통해 들어오는 스트림(내용)
 				InputStreamReader : InputStream의 경우 바이트로 들어옴. 이걸 문자열로 엮어 준게 InputStreamReader
@@ -76,14 +81,17 @@ class EachClientThread extends Thread {
 
 			// 수신된 첫번째 문자열을 닉네임으로 지정합니다.
 			name = reader.readLine();		// 파일을 한줄 한줄 읽기.
+			
+			// System.out.println("이름 받았어 : " + name);
 			sendAll("#" + name + "님이 들어오셨습니다");
 			
 
 			// 확실하진 않지만 readLine의 경우 Thread.stop()기능이 있어서 
 			// 데이터가 들어오지 않으면 올 때 까지 멈춰있음.
 			while(true) {
-				String str = reader.readLine();
+				str = reader.readLine();
 				// 그렇기 때문에 데이터가 들어오지 않으면 이 단계에서 멈추어져 있음.
+				// System.out.println(str.getClass().getName());	// 인코딩 확인
 
 				// NULL값이 들어오면 종료
 				if(str == null) {
@@ -131,12 +139,20 @@ class EachClientThread extends Thread {
 public class ChattingServer {
 
 	public static void main(String[] args) {
+
+		
+
+
+
+
+
 		ServerSocket serverSocket = null;
 		
 		try {
 			// 소켓을 여는것(서버를 여는것). IP는 서버 실행하는 컴퓨터의 IP
 			// 7777의 경우는 여는 포트. (NodeJs와 리눅스에서 배운내용과 비슷)
 			serverSocket = new ServerSocket(7777);
+			System.out.println("서버가 열렸습니다...");
 			
 			// 클라이언트가 접속할 때마다 별도의 소켓을 생성하고,
 			// 메시지의 수발신 처리를 위한 스레드를 만들고 바로 실행합니다.

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class SimpleDictionary extends JPanel implements ActionListener{
     
@@ -14,6 +16,7 @@ public class SimpleDictionary extends JPanel implements ActionListener{
 
     // 한영사전 : 한글단어와 대응되는 영어단어의 쌍을 저장
     Map<String, String> dict=new HashMap<>();
+    private static final String DIC_FILE_NAME = "./j210507/ch15/dict.props";
 
 
     public SimpleDictionary()
@@ -26,6 +29,27 @@ public class SimpleDictionary extends JPanel implements ActionListener{
         addBtn.addActionListener(this);
 
         this.setPreferredSize(new Dimension(600,50));
+        buildDictionaryFromFile();
+    }
+
+    private void buildDictionaryFromFile()
+    {
+        Properties props = new Properties();
+        try(FileReader fReader = new FileReader(DIC_FILE_NAME))
+        {
+            props.load(fReader);
+        } catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        
+        Set<Object> set = props.keySet();
+        for(Object key : set)
+        {
+            System.out.println("key : " + key);
+            Object value = props.get(key);
+            dict.put((String) key, (String) value);
+        }
     }
 
 
@@ -72,6 +96,16 @@ public class SimpleDictionary extends JPanel implements ActionListener{
 
         imputField.requestFocus();
         
+    }
+
+    private void addWordToFile(String key, String value)
+    {
+        try(FileWriter fWriter = new FileWriter(DIC_FILE_NAME)){
+            String str=key + " = " +value + "\n";
+            fWriter.write(str);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public static void main(String[] args)

@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
     <Button
         android:id="@+id/chatting"
         android:layout_width="300dp"
@@ -19,6 +20,17 @@
         android:text="Chatting"
         android:layout_gravity="center"
         android:layout_margin="5dp"/>
+
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:id="@+id/loginPage"/>
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            android:id="@+id/testPage"/>
 
 
     </LinearLayout>

@@ -7,6 +7,11 @@
     tools:context=".Chatting"
     android:layout_gravity="center">
 
+<!--    최 상단 채팅방이름, 인원/최대인원-->
+<!--    방 정보 왼쪽 사이드 바-->
+
+<!--    방 팔 때 장소랑 시간 정해 놈-->
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -27,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="채팅하는곳"
+            android:text="채팅방 이름"
             android:textSize="30sp"
             app:layout_constraintTop_toTopOf="@+id/linearLayout"
             tools:layout_editor_absoluteX="-4dp" />
@@ -59,7 +64,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout4"
+        android:id="@+id/Bottom"
         android:layout_width="fill_parent"
         android:layout_height="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
