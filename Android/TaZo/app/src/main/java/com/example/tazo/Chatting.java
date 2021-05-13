@@ -105,13 +105,14 @@ public class Chatting extends AppCompatActivity {
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg){
-            System.out.println("일단 handler는 실행 됨");
+//            System.out.println("일단 handler는 실행 됨");
             if(msg.what==1)
             {
                 String messageStr=(String)msg.obj;
                 chatData = new ChattingData(R.drawable.ic_launcher_background, otherName, messageStr);
                 arrayList.add(chatData);
                 chattingAdapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(arrayList.size()-1);
 
             }
 
