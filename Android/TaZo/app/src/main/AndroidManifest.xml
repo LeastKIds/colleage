@@ -10,9 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TaZo">
-        <activity android:name=".Test"></activity>
+        <activity android:name=".Chatting"></activity>
         <activity android:name=".LoginPage" />
-<!--        <activity android:name=".Chatting" />-->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

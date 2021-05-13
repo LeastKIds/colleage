@@ -47,14 +47,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
             }
         });
 
-//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//
-//                remove(holder.getAdapterPosition());
-//                return true;
-//            }
-//        });
+
 
     }
 

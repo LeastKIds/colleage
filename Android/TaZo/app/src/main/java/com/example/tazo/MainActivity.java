@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
         chatting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this,Chatting.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this,Chatting.class);
+                startActivity(intent);
             }
         });
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         testPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Test.class);
+                Intent intent = new Intent(MainActivity.this, Chatting.class);
                 startActivity(intent);
             }
         });
