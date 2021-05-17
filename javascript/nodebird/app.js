@@ -6,18 +6,29 @@ const path = require('path');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
+const passport = require('passport');
 // ---------------------------------------------
 
 dotenv.config(); // dotenv를 사용하기 위한 설정. 비밀번호같은 걸 다른 파일에 저장해서 불러와서 씀
 const pageRouter = require('./routes/page');
+const { sequelize } = require('./models');
+const passportConfig = require('./passport');
 
 const app = express();
-
+passportConfig();   // 패스포트 설정
 app.set('port',process.env.PORT || 8001);   // 포트 번호 세팅. 초기 설정이 없으면 8001로 설정
 app.set('view engine', 'html'); // 넌적스 사용. html을 좀더 유연하게 사용 가능
 nunjucks.configure('views', {
     express : app,
     watch : true,
+});
+
+sequelize.sync({ force : false })       // 시작 할 때 마다 데이터 베이스를 새로 만들건가
+.then( () => {
+    console.log('데이터베이스 연결 성공');
+})
+.catch( (err) => {
+    console.error(err);
 });
 
 app.use(morgan('dev')); // 현재 돌아가는 상황을 나타 내 줌.

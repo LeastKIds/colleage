@@ -1,9 +1,14 @@
+<!-- layout에 들어갈 부분 -->
+<!-- layout에서 join 경로로 들어 갈 경우 -->
+<!-- 아래 부분 중 해당 하는 곳이 적용 -->
 {% extends 'layout.html' %}
 
+<!-- layout의 content 부분 -->
 {% block content %}
   <div class="timeline">
     <form id="join-form" action="/auth/join" method="post">
       <div class="input-group">
+        <!-- 라벨의 경우 for = id -->
         <label for="join-email">이메일</label>
         <input id="join-email" type="email" name="email"></div>
       <div class="input-group">
@@ -16,14 +21,22 @@
       <button id="join-btn" type="submit" class="btn">회원가입</button>
     </form>
   </div>
+  <!-- content 부분 끝 -->
 {% endblock %}
 
+<!-- layout의 script 부분 -->
 {% block script %}
   <script>
     window.onload = () => {
+      // serachParams : 쿼리 스트링을 분석하기 위한 기능
+      // ...?page=3&limit=10...
+      // url.serachParams.get('page') : 3
+      // 만약 쿼리 스트링에 error 가 있다면
+      // location.href : 현재 접속중인 페이지 정보
       if (new URL(location.href).searchParams.get('error')) {
         alert('이미 존재하는 이메일입니다.');
       }
     };
   </script>
+  <!-- script 부분 끝 -->
 {% endblock %}

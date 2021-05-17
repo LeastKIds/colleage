@@ -13,16 +13,20 @@
         <div class="profile">
           <!-- user 과 user.id 값이 있으면 -->
           {% if user and user.id %}
+          <!-- 안녕하세요! (user.nick) 님 -->
             <div class="user-name">{{'안녕하세요! ' + user.nick + '님'}}</div>
             <div class="half">
               <div>팔로잉</div>
+              <!-- page.js에 있는 변수 -->
               <div class="count following-count">{{followingCount}}</div>
             </div>
             <div class="half">
               <div>팔로워</div>
+              <!-- page.js에 있는 변수 -->
               <div class="count follower-count">{{followerCount}}</div>
             </div>
           <input id="my-id" type="hidden" value="{{user.id}}">
+          <!-- 하이퍼 링크 -->
           <a id="my-profile" href="/profile" class="btn">내 프로필</a>
           <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
           <!-- 없으면 -->
@@ -48,6 +52,7 @@
           <a href="https://www.zerocho.com" target="_blank">ZeroCho</a>
         </footer>
       </div>
+      <!-- 변수처럼 다른 곳에서 이 부분이 넘어옴 -->
       {% block content %}
       {% endblock %}
     </div>
@@ -59,6 +64,7 @@
         }
       };
     </script>
+    <!-- 변수처럼 다른 곳에서 이 부분이 넘어옴 -->
     {% block script %}
     {% endblock %}
   </body>
