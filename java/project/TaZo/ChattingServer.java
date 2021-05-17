@@ -13,6 +13,8 @@ import java.text.DateFormat.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser; 
 
 /**
  * 다 대 다 연결을 지원하는 서버입니다.
@@ -65,6 +67,8 @@ class EachClientThread extends Thread {
 	public void run() {
 		String name = null;
 		String str = null;
+		JSONObject jsonObject;
+		
 		
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(),StandardCharsets.UTF_8));
@@ -82,8 +86,11 @@ class EachClientThread extends Thread {
 			// 수신된 첫번째 문자열을 닉네임으로 지정합니다.
 			name = reader.readLine();		// 파일을 한줄 한줄 읽기.
 			
+			JSONParser jsonParserName=new JSONParser();
+				Object obj = jsonParserName.parse(name);
+				JSONObject jsonName=(JSONObject) obj;
 			// System.out.println("이름 받았어 : " + name);
-			sendAll("#" + name + "님이 들어오셨습니다");
+			sendAll(jsonName);
 			
 
 			// 확실하진 않지만 readLine의 경우 Thread.stop()기능이 있어서 
@@ -97,9 +104,13 @@ class EachClientThread extends Thread {
 				if(str == null) {
 					break;
 				}
+
+				JSONParser jsonParser=new JSONParser();
+				Object obj2 = jsonParser.parse(str);
+				JSONObject jsonStr=(JSONObject) obj2;
 				
 				// 수신된 메시지 앞에 대화명을 붙여서 모든 클라이언트로 보냅니다.
-				sendAll(name + ">" + str);
+				sendAll(jsonStr);
 			}
 		}
 
@@ -110,7 +121,7 @@ class EachClientThread extends Thread {
 		finally {
 			list.remove(writer);
 			// 해당 사용자가 채팅을 종료했다는 메시지를 모든 클라이언트로 보냅니다.
-			sendAll("#" + name + "님이 나가셨습니다");
+			// sendAll("#" + name + "님이 나가셨습니다");
 			
 			try {
 				socket.close();
@@ -123,12 +134,16 @@ class EachClientThread extends Thread {
 		}
 	}
 
-	private void sendAll(String str) {
+	private void sendAll(JSONObject jsonStr) {
 		for (PrintWriter writer : list) {
 			// 서버에 연결된 모든 클라이언트로 똑같은 메세지를 보냅니다.
-			System.out.println(str);
-			writer.println(str);
-			writer.flush();
+		
+			
+				System.out.println(jsonStr);
+				writer.println(jsonStr);
+				writer.flush();
+			
+			
 			// println을 한다고 가는게 아니라 flush를 해 줘야 전송 됨.
 			// flush를 안 하면 계속 쌓여있음.
 		}

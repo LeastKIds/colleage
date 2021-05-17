@@ -13,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
     private Button chatting;
     private Button loginPage;
     private Button testPage;
+    private Button kakaoMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

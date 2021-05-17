@@ -6,13 +6,21 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.*;
 
 public class SimpleDictionary extends JPanel implements ActionListener{
     
     // 입력 필드, 버튼 2개
-    private JTextField imputField=new JTextField(30);
+    private JTextField inputField=new JTextField(30);
     private JButton searchBtn=new JButton("검색");
     private JButton addBtn=new JButton("추가");
+
+    private static final String JDBC_CLASS_NAME = "org.mariadb.jdbc.Driver";
+    private static final String DB_URL = "jdbc:mariadb://localhost:3306/oop3";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "root";
 
     // 한영사전 : 한글단어와 대응되는 영어단어의 쌍을 저장
     Map<String, String> dict=new HashMap<>();
@@ -21,7 +29,7 @@ public class SimpleDictionary extends JPanel implements ActionListener{
 
     public SimpleDictionary()
     {
-        this.add(imputField);
+        this.add(inputField);
         this.add(searchBtn);
         this.add(addBtn);
         
@@ -29,7 +37,20 @@ public class SimpleDictionary extends JPanel implements ActionListener{
         addBtn.addActionListener(this);
 
         this.setPreferredSize(new Dimension(600,50));
-        buildDictionaryFromFile();
+        // buildDictionaryFromFile();
+        
+        // JDBC 드라이버를 메모리에 적재하기
+        // JDBC 드라이버 클래스 이름은 DBMS 마다 다르다.
+        try {
+            Class.forName(JDBC_CLASS_NAME);
+            buildDictionaryFromDB();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+
+        
     }
 
     private void buildDictionaryFromFile()
@@ -56,7 +77,7 @@ public class SimpleDictionary extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String key=imputField.getText();    // 공통적으로 수행하는 것
+        String key=inputField.getText();    // 공통적으로 수행하는 것
         System.out.println("[" + key + "]");
         if(key.trim().length()==0)
             return;
@@ -94,7 +115,7 @@ public class SimpleDictionary extends JPanel implements ActionListener{
 
         }
 
-        imputField.requestFocus();
+        inputField.requestFocus();
         
     }
 
@@ -118,5 +139,32 @@ public class SimpleDictionary extends JPanel implements ActionListener{
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+    }
+
+    private void buildDictionaryFromDB()
+    {
+        // 데이터베이스 연결하기
+        try(Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);) {
+            String sql="select * from dict";
+            // PreparedStatement 객체는 실행 준비가 완료된 SQL 객체
+            PreparedStatement pStatement = con.prepareStatement(sql);
+
+            // Insert, Delete, Update 문 의 실행은
+            // executeUpdate() 메소드를 호출 하고
+            // select 문의 실행은 executeQuery() 메서드를 호출`
+            ResultSet rs= pStatement.executeQuery();
+            while(rs.next())
+            {
+                // rs.getString(1);
+                String key = rs.getString("kor");
+                String value = rs.getString("eng");
+
+                System.out.println(key + " : " + value);
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

@@ -31,6 +31,11 @@
             android:layout_height="wrap_content"
             android:text="Test"
             android:id="@+id/testPage"/>
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="naverMap"
+            android:id="@+id/naverMap"/>
 
 
     </LinearLayout>

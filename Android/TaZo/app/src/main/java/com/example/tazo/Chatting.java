@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,6 +31,7 @@ public class Chatting extends AppCompatActivity {
 
     private Message msg;
     static int testNum=0;
+    JSONObject jsonObject;
 
 
     private ArrayList<ChattingData> arrayList;
@@ -86,6 +90,8 @@ public class Chatting extends AppCompatActivity {
                 sumStr=message_edit_test.getText().toString();
                 message_edit_test.setText("");
 
+                jsonObject=new JSONObject();
+                jsonObject.put("content",sumStr);
 
                 testNum = 1;
 
@@ -146,6 +152,17 @@ public class Chatting extends AppCompatActivity {
 
                     String str = readerOut.readLine();
 
+                    JSONParser jsonParser=new JSONParser();
+                    Object obj = jsonParser.parse(str);
+                    JSONObject jsonStr=(JSONObject) obj;
+                    System.out.println(jsonStr.get("content"));
+                    if(jsonStr.get("content") != null)
+                        str=(String)jsonStr.get("content");
+                    else
+                    {
+                        jsonStr = (JSONObject)jsonStr.get("User");
+                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
+                    }
                     msg = handler.obtainMessage();
                     msg.what=1;
                     msg.obj=str;
@@ -188,15 +205,23 @@ public class Chatting extends AppCompatActivity {
 
                 // 제일 먼저 서버로 대화명을 송신합니다.
                 // 맨 먼저 간 값이 닉네임이 되기 때문.
-                writer.println(name);
+
+                JSONObject jsonName = new JSONObject();
+                jsonName.put("nickname",name);
+                JSONObject jsonName2=new JSONObject();
+                jsonName2.put("User",jsonName);
+
+
+                writer.println(jsonName2);
                 writer.flush();
                 System.out.println("이름 보냇음");
                 while(true)
                 {
                     if(testNum==1)
                     {
+                        System.out.println(jsonObject);
 
-                        writer.println(sumStr);
+                        writer.println(jsonObject);
                         writer.flush();
                         testNum=0;
                     }
