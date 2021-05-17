@@ -1,6 +1,8 @@
 // 사용자 이름 눌렀을 때 댓글 로딩
 document.querySelectorAll('#user-list tr').forEach((el) => {
     el.addEventListener('click', function () {
+      console.log(el)
+      console.log(el.querySelector('td'))
       const id = el.querySelector('td').textContent;
       getComment(id);
     });
@@ -99,7 +101,7 @@ document.querySelectorAll('#user-list tr').forEach((el) => {
     const name = e.target.username.value;
     const age = e.target.age.value;
     const married = e.target.married.checked;
-    if (!name) {
+    if (!name) {  // data validation : 데어터 체크
       return alert('이름을 입력하세요');
     }
     if (!age) {
