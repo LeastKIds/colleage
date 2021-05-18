@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,15 +26,26 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class Chatting extends AppCompatActivity {
 
+    private String record ="";
+//  ----------------------------------------------------
     private DrawerLayout drawerLayout;
     private View drawerView;
     private TextView textView_test;
@@ -68,6 +80,22 @@ public class Chatting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
+
+        HttpAsyncTask httpAsyncTask = new HttpAsyncTask(record);
+        try {
+            record =httpAsyncTask.execute("https://jsonplaceholder.typicode.com/posts").get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println(record);
+
+
+
+//     ---------------------------------------------------------------------------------
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 //-----------------------------------------------------------------------------
@@ -189,7 +217,7 @@ public class Chatting extends AppCompatActivity {
                     {
                         jsonStr = (JSONObject)jsonStr.get("User");
                         nameCheck = (String) jsonStr.get("nickname");
-                        System.out.println(123123);
+//                        System.out.println(123123);
                         System.out.println(nameCheck);
                         str = nameCheck;
 //                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
@@ -298,6 +326,8 @@ public class Chatting extends AppCompatActivity {
             
 //            System.out.println("AsyncTask 실행중");
             try{
+
+//                ---------------------------------------------------
                 Socket socket = new Socket("10.0.2.2", 7777);
                 ReceiverThread thread1 = new ReceiverThread(socket);
                 SenderThread thread2 = new SenderThread(socket,name);
@@ -325,6 +355,8 @@ public class Chatting extends AppCompatActivity {
 
 
 
+
+
 //    -----------------------------------------------------------
     // 내비 바의 상태
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
@@ -348,6 +380,41 @@ public class Chatting extends AppCompatActivity {
 
         }
     };
+
+    private static class HttpAsyncTask extends AsyncTask<String, Void, String>{
+
+        OkHttpClient client = new OkHttpClient();
+        String result;
+
+        public HttpAsyncTask(String result)
+        {
+            this.result=result;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String strUrl = params[0];
+
+            try {
+                Request request = new Request.Builder().url(strUrl).build();
+                Response response = client.newCall(request).execute();
+                result = response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            System.out.println(result);
+
+            return result;
+        }
+
+        public String getResult()
+        {
+            return result;
+        }
+
+
+    }
 
 }
 
