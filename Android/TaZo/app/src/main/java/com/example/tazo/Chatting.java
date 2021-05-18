@@ -1,19 +1,24 @@
 package com.example.tazo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -29,6 +34,13 @@ import java.util.ArrayList;
 
 public class Chatting extends AppCompatActivity {
 
+    private DrawerLayout drawerLayout;
+    private View drawerView;
+    private TextView textView_test;
+    private Button socketClose;
+    private int socketCloseNumber=0;
+    private int socketCloseNumber2=0;
+//    ---------------------------------------------------
     private Message msg;
     static int testNum=0;
     JSONObject jsonObject;
@@ -41,24 +53,46 @@ public class Chatting extends AppCompatActivity {
 
     private Button send_button_test;
     private EditText message_edit_test;
-    private TextView message_text_test;
-
     String sumStr="";
-    String name="안드로이드";
-    String otherName="이클립스";
+    String name="스마트폰1";
+    String nameCheck="";
+    int inOut=-1;
 
     ReceiverThread thread1;
 
     ChattingData chatData;
 
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//-----------------------------------------------------------------------------
 
+        drawerLayout= (DrawerLayout) findViewById(R.id.ChattingActivity);
+        drawerView = (View) findViewById(R.id.drawer);
+
+        drawerLayout.setDrawerListener(listener);
+        drawerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+        textView_test = (TextView) findViewById(R.id.textView_test);
+        textView_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(drawerView);
+            }
+        });
+
+        Button socketClose = (Button) findViewById(R.id.socketClose);
+//        ------------------------------------------------------------------
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
@@ -81,9 +115,6 @@ public class Chatting extends AppCompatActivity {
         RecyclerDecoration spaceDecoration = new RecyclerDecoration(30);
         recyclerView.addItemDecoration(spaceDecoration);
 
-
-
-
         send_button_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,15 +126,22 @@ public class Chatting extends AppCompatActivity {
 
                 testNum = 1;
 
-
-
-
             }
         });
 
 
 //        recyclerView.scrollToPosition(ChattingAdapter.getItemCount()-1);
 
+
+        socketClose = (Button) findViewById(R.id.socketClose);
+        socketClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("socket close button");
+                socketCloseNumber=1;
+                onBackPressed();
+            }
+        });
 
 
     }
@@ -115,7 +153,8 @@ public class Chatting extends AppCompatActivity {
             if(msg.what==1)
             {
                 String messageStr=(String)msg.obj;
-                chatData = new ChattingData(R.drawable.ic_launcher_background, otherName, messageStr);
+
+                chatData = new ChattingData(R.drawable.ic_launcher_background, nameCheck, messageStr, name, inOut);
                 arrayList.add(chatData);
                 chattingAdapter.notifyDataSetChanged();
                 recyclerView.scrollToPosition(arrayList.size()-1);
@@ -131,21 +170,11 @@ public class Chatting extends AppCompatActivity {
             this.socket = socket;
         }
 
-
-
         @Override
         public void run() {
 
             System.out.println("ReceiverThread 실행");
-
-
-
             try {
-
-
-
-
-
                 // Input 상대방 내용이 나에게 들어올 때.
                 BufferedReader readerOut = new BufferedReader(new InputStreamReader(socket.getInputStream(),"utf-8"));
                 while (true) {
@@ -155,14 +184,27 @@ public class Chatting extends AppCompatActivity {
                     JSONParser jsonParser=new JSONParser();
                     Object obj = jsonParser.parse(str);
                     JSONObject jsonStr=(JSONObject) obj;
-                    System.out.println(jsonStr.get("content"));
-                    if(jsonStr.get("content") != null)
-                        str=(String)jsonStr.get("content");
-                    else
+
+                    if(jsonStr.get("content") == null)
                     {
                         jsonStr = (JSONObject)jsonStr.get("User");
-                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
+                        nameCheck = (String) jsonStr.get("nickname");
+                        System.out.println(123123);
+                        System.out.println(nameCheck);
+                        str = nameCheck;
+//                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
+                        inOut=2;
                     }
+                    else
+                    {
+                        str=(String)jsonStr.get("content");
+                        jsonStr = (JSONObject)jsonStr.get("User");
+                        nameCheck = (String) jsonStr.get("nickname");
+                        inOut = 1;
+                    }
+
+
+
                     msg = handler.obtainMessage();
                     msg.what=1;
                     msg.obj=str;
@@ -225,6 +267,14 @@ public class Chatting extends AppCompatActivity {
                         writer.flush();
                         testNum=0;
                     }
+
+                    if(socketCloseNumber==1)
+                    {
+                        writer.println(name + " 종료합니다.");
+                        writer.flush();
+                        socketCloseNumber2=1;
+                        break;
+                    }
                 }
 
             } catch (Exception e) {
@@ -246,13 +296,23 @@ public class Chatting extends AppCompatActivity {
         @Override
         protected Void doInBackground(Object[] objects) {
             
-            System.out.println("AsyncTask 실행중");
+//            System.out.println("AsyncTask 실행중");
             try{
                 Socket socket = new Socket("10.0.2.2", 7777);
                 ReceiverThread thread1 = new ReceiverThread(socket);
                 SenderThread thread2 = new SenderThread(socket,name);
                 thread1.start();
                 thread2.start();
+
+                while(true)
+                {
+                    if(socketCloseNumber2==1)
+                    {
+                        socket.close();
+                        break;
+                    }
+
+                }
 
             } catch (UnknownHostException e) {
                 e.printStackTrace();
@@ -263,6 +323,31 @@ public class Chatting extends AppCompatActivity {
         }
     }
 
+
+
+//    -----------------------------------------------------------
+    // 내비 바의 상태
+    DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+
+        }
+    };
 
 }
 

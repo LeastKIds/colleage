@@ -85,7 +85,7 @@ class EachClientThread extends Thread {
 
 			// 수신된 첫번째 문자열을 닉네임으로 지정합니다.
 			name = reader.readLine();		// 파일을 한줄 한줄 읽기.
-			
+			System.out.println(name);
 			JSONParser jsonParserName=new JSONParser();
 				Object obj = jsonParserName.parse(name);
 				JSONObject jsonName=(JSONObject) obj;
@@ -108,9 +108,16 @@ class EachClientThread extends Thread {
 				JSONParser jsonParser=new JSONParser();
 				Object obj2 = jsonParser.parse(str);
 				JSONObject jsonStr=(JSONObject) obj2;
+				// System.out.println(123);
+				String content = (String) jsonStr.get("content");
+				// System.out.println(content);
+				jsonName.put("content",content);
+				// System.out.println(jsonName);
+				
+				// System.out.println(123);
 				
 				// 수신된 메시지 앞에 대화명을 붙여서 모든 클라이언트로 보냅니다.
-				sendAll(jsonStr);
+				sendAll(jsonName);
 			}
 		}
 

@@ -14,11 +14,11 @@ const pageRouter = require('./routes/page');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
-const app = express();
+const app = express();  // 서버 객체 생성
 passportConfig();   // 패스포트 설정
 app.set('port',process.env.PORT || 8001);   // 포트 번호 세팅. 초기 설정이 없으면 8001로 설정
 app.set('view engine', 'html'); // 넌적스 사용. html을 좀더 유연하게 사용 가능
-nunjucks.configure('views', {
+nunjucks.configure('views', {   // views 폴더가 뷰 내용 작업폴더임을 설정
     express : app,
     watch : true,
 });
@@ -31,12 +31,15 @@ sequelize.sync({ force : false })       // 시작 할 때 마다 데이터 베�
     console.error(err);
 });
 
-app.use(morgan('dev')); // 현재 돌아가는 상황을 나타 내 줌.
+app.use(morgan('dev')); // 현재 돌아가는 상황을 나타 내 줌. (log관련)
 app.use(express.static(path.join(__dirname, 'public')));    // public의 폴더 경로를 숨겨줌.
-app.use(express.json());
-app.use(express.urlencoded({ extended : false}));   // false : 노드의 queryString 모듈을 사용하여 해석, true : qus 모듈을 사용하여 쿼리스트링을 해석
+// 정적 리소스(html, js, jpg,png,css 파일 등)에 대한 설정
+// 폴더를 public으로 설정
+app.use(express.json());    // json처리, body-parser 처리해줌
+app.use(express.urlencoded({ extended : false}));   // false : 노드의 queryString 모듈을 사용하여 해석, true : qus 모듈을 사용하여 쿼리스트링을 해석, body-parser 설정
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
+// 쿠키처리, 쿠키를 암호화 하기 위해 사용하는 키값을 설정
+app.use(session({ // express-session 패키지 설정
     resave : false, // 요청이 올 때 세션에 수정상항이 생기지 않더라고 세션을 다시 저장할 지 설정.
     saveUninitialized : false,  // 세션에 저장할 내역이 없더라도 처음부터 세션을 생성할지 설정
     secret : process.env.COOKIE_SECRET, // 안전하게 쿠키를 보낼려면 secret 값인 서명이 필요함

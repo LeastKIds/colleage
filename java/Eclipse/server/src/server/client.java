@@ -1,6 +1,7 @@
 package server;
 
 import java.io.BufferedOutputStream;
+import org.json.simple.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,6 +47,7 @@ class ReceiverThread extends Thread {
 				if (str == null) {
 					break;
 				}
+				
 				System.out.println(str);
 			}
 
@@ -58,9 +60,6 @@ class ReceiverThread extends Thread {
 
 }
 
-/**
- * �޽����� �߽��� ����ϴ� ������ �Դϴ�.
- */
 
 class SenderThread extends Thread {
 	Socket socket;
@@ -81,17 +80,19 @@ class SenderThread extends Thread {
 			PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),StandardCharsets.UTF_8));
 			// OutputStreamWriter writer2=new OutputStreamWriter(socket.getOutputStream(),"utf-8");
 
-			// ���� ���� ������ ��ȭ���� �۽��մϴ�.
-			// �� ���� �� ���� �г����� �Ǳ� ����.
-			writer.println(name);
+			
+			System.out.println(name);
+			JSONObject jsonNickName = new JSONObject();
+			jsonNickName.put("nickname", name);
+			JSONObject jsonUser=new JSONObject();
+			jsonUser.put("User", jsonNickName);
+			writer.println(jsonUser);
 			writer.flush();
 
 			while (true) {
 				
-				// System.out.println("����>");
+			
 				 String str = reader.readLine();
-//				String str=sc.nextLine();
-//				System.out.println("������� ��");
 
 				
 
@@ -99,12 +100,11 @@ class SenderThread extends Thread {
 					break;
 				}
 
-				
+				str="{\"content\":\""+str+"\"}";
+				System.out.println(str);
 				writer.println(str);
 				
 				writer.flush();
-				// writer2.write(str);
-				// writer2.flush();
 			}
 
 		}
@@ -131,7 +131,6 @@ public class client {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		try {
-			System.out.println("너의 이름은?");
 			String name = "김씨";
 			
 			String originalStr = name; 
