@@ -26,16 +26,24 @@
             android:layout_height="wrap_content"
             android:text="Login"
             android:id="@+id/loginPage"/>
+
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="ImageUpload"
+            android:id="@+id/ImageUpload"/>
+
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="ImageDownload"
+            android:id="@+id/ImageDownload"/>
+
         <Button
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:text="Test"
             android:id="@+id/testPage"/>
-        <Button
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:text="naverMap"
-            android:id="@+id/naverMap"/>
 
 
     </LinearLayout>

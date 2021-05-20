@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -83,7 +84,7 @@ public class Chatting extends AppCompatActivity {
 
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask(record);
         try {
-            record =httpAsyncTask.execute("https://jsonplaceholder.typicode.com/posts").get();
+            record =httpAsyncTask.execute("http://wdj1701076.dothome.co.kr/test.html").get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -91,8 +92,8 @@ public class Chatting extends AppCompatActivity {
         }
 
 
-        System.out.println(record);
-
+//        System.out.println(record);
+        setRecord(record);
 
 
 //     ---------------------------------------------------------------------------------
@@ -403,16 +404,43 @@ public class Chatting extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            System.out.println(result);
+
 
             return result;
         }
 
-        public String getResult()
-        {
-            return result;
-        }
 
+
+    }
+
+    public void setRecord(String recordMessage)
+    {
+
+        try {
+            JSONParser jsonParser = new JSONParser();
+            Object obj = jsonParser.parse(recordMessage);
+            JSONArray jsonArray = (JSONArray) obj;
+
+            for(int i=0; i<jsonArray.size(); i++)
+            {
+//                System.out.println(jsonArray.get(i));
+                System.out.println("--------------------");
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                String content = (String) jsonObject.get("content");
+                JSONObject nameJson = (JSONObject) jsonObject.get("User");
+                String recordName = (String) nameJson.get("nickname");
+                inOut = 1;
+
+                chatData = new ChattingData(R.drawable.ic_launcher_background, recordName, content, name, inOut);
+                arrayList.add(chatData);
+                chattingAdapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(arrayList.size()-1);
+
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 

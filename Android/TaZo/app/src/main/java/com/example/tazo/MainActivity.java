@@ -13,7 +13,8 @@ public class MainActivity extends AppCompatActivity {
     private Button chatting;
     private Button loginPage;
     private Button testPage;
-    private Button kakaoMap;
+    private Button imageUpload;
+    private Button imageDownload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Chatting.class);
+                startActivity(intent);
+            }
+        });
+
+        imageUpload = (Button) findViewById(R.id.ImageUpload);
+        imageUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,ImageUpload.class);
+                startActivity(intent);
+            }
+        });
+
+        imageDownload = (Button) findViewById(R.id.ImageDownload);
+        imageDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ImageDownload.class);
                 startActivity(intent);
             }
         });
