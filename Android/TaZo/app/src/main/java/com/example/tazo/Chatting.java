@@ -69,6 +69,7 @@ public class Chatting extends AppCompatActivity {
     String sumStr="";
     String name="닉네임1";
     String nameCheck="";
+    String imgURL="";
     int inOut=-1;
 
     ReceiverThread thread1;
@@ -183,7 +184,7 @@ public class Chatting extends AppCompatActivity {
             {
                 String messageStr=(String)msg.obj;
 
-                chatData = new ChattingData(R.drawable.ic_launcher_background, nameCheck, messageStr, name, inOut);
+                chatData = new ChattingData(imgURL, nameCheck, messageStr, name, inOut);
                 arrayList.add(chatData);
                 chattingAdapter.notifyDataSetChanged();
                 recyclerView.scrollToPosition(arrayList.size()-1);
@@ -218,6 +219,9 @@ public class Chatting extends AppCompatActivity {
                     {
                         jsonStr = (JSONObject)jsonStr.get("User");
                         nameCheck = (String) jsonStr.get("nickname");
+                        imgURL=(String) jsonStr.get("image");
+                        if(imgURL == null)
+                            imgURL = "https://tazoapp.site/placeholder-profile.png";
 //                        System.out.println(123123);
                         System.out.println(nameCheck);
                         str = nameCheck;
@@ -429,12 +433,16 @@ public class Chatting extends AppCompatActivity {
                 String content = (String) jsonObject.get("content");
                 JSONObject nameJson = (JSONObject) jsonObject.get("User");
                 String recordName = (String) nameJson.get("nickname");
+                String imgURLSet= (String) nameJson.get("image");
+                if(imgURLSet == null)
+                    imgURLSet = "https://tazoapp.site/placeholder-profile.png";
                 System.out.println("nickname : " + recordName);
                 System.out.println("content : " + content);
+                System.out.println("imgURLSet : " + imgURLSet);
 
                 inOut = 1;
 
-                chatData = new ChattingData(R.drawable.ic_launcher_background, recordName, content, name, inOut);
+                chatData = new ChattingData(imgURLSet, recordName, content, name, inOut);
                 arrayList.add(chatData);
 //
 //                chattingAdapter.notifyDataSetChanged();

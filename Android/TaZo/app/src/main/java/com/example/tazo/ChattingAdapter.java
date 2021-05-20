@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.CustomViewHolder> {
@@ -65,7 +67,8 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
             if(holder.nickName_first != null)
                 holder.nickName_first.setText(arrayList.get(position).getNickName()+"님 이 들어오셨습니다.");
         } else {
-            holder.profile.setImageResource(arrayList.get(position).getProfile());
+//            holder.profile.setImage(arrayList.get(position).getProfile());
+            Glide.with(holder.profile).load(arrayList.get(position).getProfile()).into(holder.profile);
             holder.nickName.setText(arrayList.get(position).getNickName());
             holder.chattingText.setText(arrayList.get(position).getChattingText());
 

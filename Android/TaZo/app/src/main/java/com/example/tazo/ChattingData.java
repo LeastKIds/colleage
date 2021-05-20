@@ -2,13 +2,13 @@ package com.example.tazo;
 
 public class ChattingData {
 
-    private int profile;
+    private String profile;
     private String nickName;
     private String chattingText;
     private String myName;
     private int inOut;
 
-    public ChattingData(int profile, String nickName, String chattingText, String myName, int inOut) {
+    public ChattingData(String profile, String nickName, String chattingText, String myName, int inOut) {
         this.profile = profile;
         this.nickName = nickName;
         this.chattingText = chattingText;
@@ -16,11 +16,11 @@ public class ChattingData {
         this.inOut = inOut;
     }
 
-    public int getProfile() {
+    public String getProfile() {
         return profile;
     }
 
-    public void setProfile(int profile) {
+    public void setProfile(String profile) {
         this.profile = profile;
     }
 
