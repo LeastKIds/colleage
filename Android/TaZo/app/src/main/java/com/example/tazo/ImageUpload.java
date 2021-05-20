@@ -36,15 +36,6 @@ public class ImageUpload extends AppCompatActivity {
             }
         });
 
-//        imageView.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(intent, REQUEST_CODE);
-//            }
-//        });
     }
 
     @Override

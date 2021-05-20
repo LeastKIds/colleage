@@ -59,7 +59,7 @@ public class Chatting extends AppCompatActivity {
     JSONObject jsonObject;
 
 
-    private ArrayList<ChattingData> arrayList;
+    private ArrayList<ChattingData> arrayList = new ArrayList<>();
     private ChattingAdapter chattingAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayout;
@@ -67,7 +67,7 @@ public class Chatting extends AppCompatActivity {
     private Button send_button_test;
     private EditText message_edit_test;
     String sumStr="";
-    String name="스마트폰1";
+    String name="닉네임1";
     String nameCheck="";
     int inOut=-1;
 
@@ -84,7 +84,7 @@ public class Chatting extends AppCompatActivity {
 
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask(record);
         try {
-            record =httpAsyncTask.execute("http://wdj1701076.dothome.co.kr/test.html").get();
+            record =httpAsyncTask.execute("https://tazoapp.site/rooms/1/chat").get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -136,7 +136,7 @@ public class Chatting extends AppCompatActivity {
         linearLayout = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayout);
 
-        arrayList = new ArrayList<>();
+
 
         chattingAdapter = new ChattingAdapter(arrayList);
         recyclerView.setAdapter(chattingAdapter);
@@ -429,12 +429,16 @@ public class Chatting extends AppCompatActivity {
                 String content = (String) jsonObject.get("content");
                 JSONObject nameJson = (JSONObject) jsonObject.get("User");
                 String recordName = (String) nameJson.get("nickname");
+                System.out.println("nickname : " + recordName);
+                System.out.println("content : " + content);
+
                 inOut = 1;
 
                 chatData = new ChattingData(R.drawable.ic_launcher_background, recordName, content, name, inOut);
                 arrayList.add(chatData);
-                chattingAdapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(arrayList.size()-1);
+//
+//                chattingAdapter.notifyDataSetChanged();
+//                recyclerView.scrollToPosition(arrayList.size()-1);
 
 
             }
