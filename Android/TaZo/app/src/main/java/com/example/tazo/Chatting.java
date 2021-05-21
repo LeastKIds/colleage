@@ -64,6 +64,7 @@ public class Chatting extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayout;
 
+
     private Button send_button_test;
     private EditText message_edit_test;
     String sumStr="";
@@ -82,6 +83,8 @@ public class Chatting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
+
+        
 
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask(record);
         try {

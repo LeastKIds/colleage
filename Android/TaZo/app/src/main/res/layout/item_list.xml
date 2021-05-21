@@ -29,7 +29,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="#A83232"
-            android:id="@+id/profile"/>
+            android:id="@+id/profile"
+            android:scaleType="fitXY"/>
 
         </LinearLayout>
 
