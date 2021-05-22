@@ -1,6 +1,7 @@
 package com.example.tazo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -8,6 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +33,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
@@ -39,30 +49,44 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Chatting extends AppCompatActivity {
+//  이미지 전송 버튼 **************************************
+    private ImageButton imageButton;
+    private String img_path;
+//  *****************************************************
 
+//  예전 채팅 기록 ****************************************
     private String record ="";
-//  ----------------------------------------------------
+//  *****************************************************
+//  옆에 네비게이션 바 ************************************
     private DrawerLayout drawerLayout;
     private View drawerView;
+//  *****************************************************
+//  채팅을 위한 소켓 **************************************
     private TextView textView_test;
     private Button socketClose;
     private int socketCloseNumber=0;
     private int socketCloseNumber2=0;
-//    ---------------------------------------------------
-    private Message msg;
-    static int testNum=0;
-    JSONObject jsonObject;
-
 
     private ArrayList<ChattingData> arrayList = new ArrayList<>();
     private ChattingAdapter chattingAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayout;
+
+//  *****************************************************
+//  메세지 전송 시 ****************************************
+    private Message msg;
+    static int testNum=0;
+    JSONObject jsonObject;
+//  *****************************************************
 
 
     private Button send_button_test;
@@ -84,8 +108,7 @@ public class Chatting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
 
-        
-
+//      AsyncTask 활용해서 소켓 실행 ***************************************************
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask(record);
         try {
             record =httpAsyncTask.execute("https://tazoapp.site/rooms/1/chat").get();
@@ -94,17 +117,19 @@ public class Chatting extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+//      *******************************************************************************
 
 
-//        System.out.println(record);
+//      예전 채팅 기록 *****************************************************************
         setRecord(record);
+//      *******************************************************************************
 
 
-//     ---------------------------------------------------------------------------------
-
+//  키보드가 나올 시 레이아웃 변경 **********************************************************
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//-----------------------------------------------------------------------------
+//  **************************************************************************************
 
+//      네비게이션 바 ********************************************************************
         drawerLayout= (DrawerLayout) findViewById(R.id.ChattingActivity);
         drawerView = (View) findViewById(R.id.drawer);
 
@@ -125,9 +150,13 @@ public class Chatting extends AppCompatActivity {
         });
 
         Button socketClose = (Button) findViewById(R.id.socketClose);
-//        ------------------------------------------------------------------
+//      ********************************************************************************
+
+//      상단 바 없애기 *******************************************************************
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+//      ********************************************************************************
+
 
         send_button_test = findViewById(R.id.send_button_test);
         message_edit_test = (EditText) findViewById(R.id.message_edit_test);
@@ -148,6 +177,8 @@ public class Chatting extends AppCompatActivity {
         RecyclerDecoration spaceDecoration = new RecyclerDecoration(30);
         recyclerView.addItemDecoration(spaceDecoration);
 
+//      메세지 전송 ******************************************************************
+
         send_button_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,11 +192,12 @@ public class Chatting extends AppCompatActivity {
 
             }
         });
+//  *********************************************************************************
 
 
 //        recyclerView.scrollToPosition(ChattingAdapter.getItemCount()-1);
 
-
+//  뒤로 나가기 **************************************************************
         socketClose = (Button) findViewById(R.id.socketClose);
         socketClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +207,23 @@ public class Chatting extends AppCompatActivity {
                 onBackPressed();
             }
         });
+//   **********************************************************************
 
+
+
+//  이미지전송 버튼 **********************************************************
+        imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+//  ************************************************************************
 
     }
 
@@ -447,9 +495,6 @@ public class Chatting extends AppCompatActivity {
 
                 chatData = new ChattingData(imgURLSet, recordName, content, name, inOut);
                 arrayList.add(chatData);
-//
-//                chattingAdapter.notifyDataSetChanged();
-//                recyclerView.scrollToPosition(arrayList.size()-1);
 
 
             }
@@ -458,6 +503,131 @@ public class Chatting extends AppCompatActivity {
         }
 
     }
+
+//  이미지 경로 확인 *******************************************************************
+    @Nullable
+    public static String getPath(@NonNull Context context, @NonNull Uri uri)
+    {
+        final ContentResolver contentResolver = context.getContentResolver();
+
+        if(contentResolver == null)
+        {
+            return null;
+        }
+
+        String filePath = context.getApplicationInfo().dataDir + File.separator + System.currentTimeMillis();
+
+        File file = new File(filePath);
+
+        try {
+            InputStream inputStream = contentResolver.openInputStream(uri);
+            if(inputStream == null)
+                return null;
+
+            OutputStream outputStream = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len = inputStream.read(buf)) > 0)
+            {
+                outputStream.write(buf,0,len);
+            }
+
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+
+        return file.getAbsolutePath();
+
+    }
+//  ***********************************************************************************
+
+//  뒤로가기 / 이미지 선택 후 ************************************************************
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 1) {
+//            if (resultCode == RESULT_OK) {
+//                Uri uri = null;
+//                if(data != null)
+//                {
+//                    uri = data.getData();
+//                }
+//                if(uri != null)
+//                {
+//
+////                    imageView.setImageURI(uri);   // 올리자마자 채팅방으로 가는게 아니라, 서버에 갔다가 옴
+//                    img_path = getPath(this,uri);
+//
+////                    img_path = Environment.getExternalStorageDirectory().getAbsolutePath() + img_path;
+//                    System.out.println("-------------------------------------------------");
+//                    System.out.println("image path : " + img_path);
+//                    goSend(img_path);
+//                }
+//            }
+//
+//        }
+        if(requestCode == 1)
+        {
+            if(data == null) {}
+            else {
+                if(data.getClipData() == null)  Toast.makeText(this, "다중 선택 불가능", Toast.LENGTH_SHORT).show();
+                else {
+                    ClipData clipData = data.getClipData();
+                    Log.i("clipData",String.valueOf(clipData.getItemCount()));
+
+                    if(clipData.getItemCount() > 5) Toast.makeText(this,"사진은 5장 까지",Toast.LENGTH_SHORT).show();
+                    else if (clipData.getItemCount() == 1) {
+                        img_path = getPath(this, data.getData());
+                        goSend(img_path);
+                    }
+                    else if (clipData.getItemCount() > 1 && clipData.getItemCount() <=5) {
+                        for (int i=0; i<clipData.getItemCount(); i++)
+                        {
+                            img_path = getPath(this, clipData.getItemAt(i).getUri());
+                            System.out.println(img_path);
+                        }
+                    }
+                }
+            }
+        }
+    }
+//  *************************************************************************************
+//  사진 보내기 **************************************************************************
+    private void goSend(String path)
+    {
+        System.out.println("보냈음 : "+path);
+//        RequestBody requestBody = new MultipartBody.Builder()
+//                .setType(MultipartBody.FORM)
+//                .addFormDataPart("image","image.jpg",RequestBody.create(MultipartBody.FORM, new File(path)))
+//                .build();
+//
+//        Request request = new Request.Builder()
+//                .url("https://tazoapp.site/post/test/image")
+//                .post(requestBody)
+//                .build();
+//
+//        OkHttpClient client = new OkHttpClient();
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e)
+//            {
+//                System.out.println("연결 실패");
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException
+//            {
+//                System.out.println("연결 성공");
+//                System.out.println(response);
+//            }
+//        });
+    }
+//   ********************************************************************************
 
 }
 

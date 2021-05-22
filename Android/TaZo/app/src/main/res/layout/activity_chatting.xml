@@ -76,12 +76,14 @@
                 android:layout_weight="1"
                 android:hint="메세지를 입력하세요"
                 android:id="@+id/message_edit_test"/>
-            <Button
+
+            <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
-                android:text="📸"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:background="@drawable/camera"
+                android:id="@+id/imageButton"/>
 
             <Button
                 android:layout_width="wrap_content"
