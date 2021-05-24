@@ -278,12 +278,17 @@ public class Chatting extends AppCompatActivity {
                         str = nameCheck;
 //                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
                         inOut=2;
-                    }
-                    else
+                    } else
                     {
-                        str=(String)jsonStr.get("content");
-                        jsonStr = (JSONObject)jsonStr.get("User");
-                        nameCheck = (String) jsonStr.get("nickname");
+                        if(((String)jsonStr.get("content")).contains("http://wewrerww"))
+                        {
+
+                        } else
+                        {
+                            str=(String)jsonStr.get("content");
+                            jsonStr = (JSONObject)jsonStr.get("User");
+                            nameCheck = (String) jsonStr.get("nickname");
+                        }
                         inOut = 1;
                     }
 
@@ -549,83 +554,83 @@ public class Chatting extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1) {
-//            if (resultCode == RESULT_OK) {
-//                Uri uri = null;
-//                if(data != null)
-//                {
-//                    uri = data.getData();
-//                }
-//                if(uri != null)
-//                {
-//
-////                    imageView.setImageURI(uri);   // 올리자마자 채팅방으로 가는게 아니라, 서버에 갔다가 옴
-//                    img_path = getPath(this,uri);
-//
-////                    img_path = Environment.getExternalStorageDirectory().getAbsolutePath() + img_path;
-//                    System.out.println("-------------------------------------------------");
-//                    System.out.println("image path : " + img_path);
-//                    goSend(img_path);
-//                }
-//            }
-//
-//        }
-        if(requestCode == 1)
-        {
-            if(data == null) {}
-            else {
-                if(data.getClipData() == null)  Toast.makeText(this, "다중 선택 불가능", Toast.LENGTH_SHORT).show();
-                else {
-                    ClipData clipData = data.getClipData();
-                    Log.i("clipData",String.valueOf(clipData.getItemCount()));
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Uri uri = null;
+                if(data != null)
+                {
+                    uri = data.getData();
+                }
+                if(uri != null)
+                {
 
-                    if(clipData.getItemCount() > 5) Toast.makeText(this,"사진은 5장 까지",Toast.LENGTH_SHORT).show();
-                    else if (clipData.getItemCount() == 1) {
-                        img_path = getPath(this, data.getData());
-                        goSend(img_path);
-                    }
-                    else if (clipData.getItemCount() > 1 && clipData.getItemCount() <=5) {
-                        for (int i=0; i<clipData.getItemCount(); i++)
-                        {
-                            img_path = getPath(this, clipData.getItemAt(i).getUri());
-                            System.out.println(img_path);
-                        }
-                    }
+//                    imageView.setImageURI(uri);   // 올리자마자 채팅방으로 가는게 아니라, 서버에 갔다가 옴
+                    img_path = getPath(this,uri);
+
+//                    img_path = Environment.getExternalStorageDirectory().getAbsolutePath() + img_path;
+                    System.out.println("-------------------------------------------------");
+                    System.out.println("image path : " + img_path);
+                    goSend(img_path);
                 }
             }
+
         }
+//        if(requestCode == 1)
+//        {
+//            if(data == null) {}
+//            else {
+//                if(data.getClipData() == null)  Toast.makeText(this, "다중 선택 불가능", Toast.LENGTH_SHORT).show();
+//                else {
+//                    ClipData clipData = data.getClipData();
+//                    Log.i("clipData",String.valueOf(clipData.getItemCount()));
+//
+//                    if(clipData.getItemCount() > 5) Toast.makeText(this,"사진은 5장 까지",Toast.LENGTH_SHORT).show();
+//                    else if (clipData.getItemCount() == 1) {
+//                        img_path = getPath(this, data.getData());
+//                        goSend(img_path);
+//                    }
+//                    else if (clipData.getItemCount() > 1 && clipData.getItemCount() <=5) {
+//                        for (int i=0; i<clipData.getItemCount(); i++)
+//                        {
+//                            img_path = getPath(this, clipData.getItemAt(i).getUri());
+//                            System.out.println(img_path);
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 //  *************************************************************************************
 //  사진 보내기 **************************************************************************
     private void goSend(String path)
     {
         System.out.println("보냈음 : "+path);
-//        RequestBody requestBody = new MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("image","image.jpg",RequestBody.create(MultipartBody.FORM, new File(path)))
-//                .build();
-//
-//        Request request = new Request.Builder()
-//                .url("https://tazoapp.site/post/test/image")
-//                .post(requestBody)
-//                .build();
-//
-//        OkHttpClient client = new OkHttpClient();
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e)
-//            {
-//                System.out.println("연결 실패");
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException
-//            {
-//                System.out.println("연결 성공");
-//                System.out.println(response);
-//            }
-//        });
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("image","image.jpg",RequestBody.create(MultipartBody.FORM, new File(path)))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://tazoapp.site/post/test/image")
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                System.out.println("연결 실패");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                System.out.println("연결 성공");
+                System.out.println(response);
+            }
+        });
     }
 //   ********************************************************************************
 

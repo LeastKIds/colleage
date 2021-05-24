@@ -11,6 +11,7 @@ const passport = require('passport');
 
 dotenv.config(); // dotenv를 사용하기 위한 설정. 비밀번호같은 걸 다른 파일에 저장해서 불러와서 씀
 const pageRouter = require('./routes/page');
+const authRouter = require('./routes/auth');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
@@ -48,8 +49,17 @@ app.use(session({ // express-session 패키지 설정
         secure : false,     // https를 적용하는 부분
     },
 }));
+// 사용자 정의 미들웨어 구현
+// 미들웨어 req,res,next
+
+// req에 passport 모듈 관련 정보를 저장
+app.use(passport.initialize());
+// express-session 미들웨어보다 뒤에 작성되어야 함
+// req.session객체를 만든 뒤에 실행 해야 하기 때문
+app.use(passport.session());
 
 app.use('/', pageRouter);
+app.use('/auth',authRouter);
 
 // 404 응답 미들웨어. 만약 404에 해당하는 에러가 나타나면 해당 값을 에러 미들웨어로 넘김.
 app.use((req,res,next) => {

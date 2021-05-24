@@ -1,17 +1,26 @@
 // 자바로 따지면 import --------------------------------
 const express = require('express');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 // -----------------------------------------------------
 
 const router = express.Router(); // 라우터를 깔끔하게 관리하기 위해서
 
 // use : 모든 요청에서
 router.use((req,res,next) => {  // 라우터에서 사용되는 미들웨어 정의
-    res.locals.user=null;       // res.locals --> nunjucks에서 사용
+    res.locals.user=req.user;       // res.locals --> nunjucks에서 사용
     // 현재 로그인한 사람의 정보, 최초는 없기 때문에 null
     res.locals.followerCount=0;
     res.locals.followingCount=0;
     res.locals.followerIdList = [];
     next();
+});
+
+router.get('/profile',isLoggedIn,(req,res) => {
+    res.render('profile', { title : '내 정보 - NodeBird' });
+});
+
+router.get('/join', isNotLoggedIn, (req,res) => {
+    res.render('join', { title : '회원가입 - NodeBird' });
 });
 
 // get : /profile의 get요청시 실행
