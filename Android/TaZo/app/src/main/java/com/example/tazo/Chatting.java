@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -41,16 +39,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -61,6 +57,7 @@ public class Chatting extends AppCompatActivity {
 //  이미지 전송 버튼 **************************************
     private ImageButton imageButton;
     private String img_path;
+    private int imgCheckReceiver = 0;
 //  *****************************************************
 
 //  예전 채팅 기록 ****************************************
@@ -80,6 +77,7 @@ public class Chatting extends AppCompatActivity {
     private ChattingAdapter chattingAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayout;
+
 
 //  *****************************************************
 //  메세지 전송 시 ****************************************
@@ -102,6 +100,8 @@ public class Chatting extends AppCompatActivity {
     ChattingData chatData;
 
 
+
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +117,7 @@ public class Chatting extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println(record);
 //      *******************************************************************************
 
 
@@ -183,12 +184,20 @@ public class Chatting extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sumStr=message_edit_test.getText().toString();
+                String chattingMessage=message_edit_test.getText().toString();
                 message_edit_test.setText("");
 
                 jsonObject=new JSONObject();
                 jsonObject.put("content",sumStr);
 
+
+
                 testNum = 1;
+                Log.d("sendChattingMessage","123");
+                SenderThread2 senderThread2 = new SenderThread2(chattingMessage);
+                senderThread2.start();
+
+
 
             }
         });
@@ -231,14 +240,39 @@ public class Chatting extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg){
 //            System.out.println("일단 handler는 실행 됨");
+            String content,userName, profileURL;
             if(msg.what==1)
             {
-                String messageStr=(String)msg.obj;
+                String messageStr= (String) msg.obj;
+//              여기서 제이슨으로 파싱해서 쪼갬 *************************************************
+                try {
+                    JSONParser jsonParser=new JSONParser();
+                    Object obj = jsonParser.parse(messageStr);
+                    JSONObject jsonStr=(JSONObject) obj;
 
-                chatData = new ChattingData(imgURL, nameCheck, messageStr, name, inOut);
-                arrayList.add(chatData);
-                chattingAdapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(arrayList.size()-1);
+                    content = (String) jsonStr.get("content");
+                    JSONObject jsonUser = (JSONObject) jsonStr.get("User");
+                    userName = (String) jsonUser.get("nickname");
+                    profileURL = (String) jsonUser.get("image");
+                    if(profileURL == null)
+                        profileURL="https://tazoapp.site/placeholder-profile.png";
+
+                    chatData = new ChattingData(profileURL, userName, content, name, inOut,imgCheckReceiver);
+                    arrayList.add(chatData);
+                    chattingAdapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(arrayList.size()-1);
+
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+
+
+//                chatData = new ChattingData(imgURL, nameCheck, messageStr, name, inOut,imgCheckReceiver);
+//                arrayList.add(chatData);
+//                chattingAdapter.notifyDataSetChanged();
+//                recyclerView.scrollToPosition(arrayList.size()-1);
 
             }
 
@@ -280,11 +314,12 @@ public class Chatting extends AppCompatActivity {
                         inOut=2;
                     } else
                     {
-                        if(((String)jsonStr.get("content")).contains("http://wewrerww"))
+                        if(((String)jsonStr.get("content")).contains("https://storage.googleapis.com/tazo-bucket/uploads"))
                         {
-
+                            imgCheckReceiver=1;
                         } else
                         {
+                            imgCheckReceiver=0;
                             str=(String)jsonStr.get("content");
                             jsonStr = (JSONObject)jsonStr.get("User");
                             nameCheck = (String) jsonStr.get("nickname");
@@ -327,6 +362,7 @@ public class Chatting extends AppCompatActivity {
         @Override
         public void run()
         {
+            Log.d("senderThread","senderThread start");
             System.out.println("SenderThread 실행 중");
 
             try{
@@ -369,6 +405,10 @@ public class Chatting extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
+
+
         }
 
     }
@@ -384,7 +424,8 @@ public class Chatting extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Object[] objects) {
-            
+
+
 //            System.out.println("AsyncTask 실행중");
             try{
 
@@ -475,6 +516,7 @@ public class Chatting extends AppCompatActivity {
 
     public void setRecord(String recordMessage)
     {
+        int imgCheck=0;
 
         try {
             JSONParser jsonParser = new JSONParser();
@@ -484,22 +526,40 @@ public class Chatting extends AppCompatActivity {
             for(int i=0; i<jsonArray.size(); i++)
             {
 //                System.out.println(jsonArray.get(i));
-                System.out.println("--------------------");
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                String content = (String) jsonObject.get("content");
-                JSONObject nameJson = (JSONObject) jsonObject.get("User");
-                String recordName = (String) nameJson.get("nickname");
-                String imgURLSet= (String) nameJson.get("image");
-                if(imgURLSet == null)
-                    imgURLSet = "https://tazoapp.site/placeholder-profile.png";
-                System.out.println("nickname : " + recordName);
-                System.out.println("content : " + content);
-                System.out.println("imgURLSet : " + imgURLSet);
+//                System.out.println("--------------------");
+//                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+//                String content = (String) jsonObject.get("content");
+//
+//                if(content.contains("https://storage.googleapis.com/tazo-bucket/uploads"))
+//                {
+//                    if(content.contains("https://storage.googleapis.com/tazo-bucket/uploads/1621929381665_image.jpg"))
+//                        System.out.println("상대편 이미지가 오긴 옮");
+//                    imgCheck=1;
+//                }else
+//                    imgCheck=0;
+//                JSONObject nameJson = (JSONObject) jsonObject.get("User");
+//                String recordName = (String) nameJson.get("nickname");
+//                String imgURLSet= (String) nameJson.get("image");
+//                if(imgURLSet == null)
+//                    imgURLSet = "https://tazoapp.site/placeholder-profile.png";
+//                System.out.println("nickname : " + recordName);
+//                System.out.println("content : " + content);
+//                System.out.println("imgURLSet : " + imgURLSet);
+//
+//                inOut = 1;
+//
+//                recyclerView.setLayoutManager(linearLayout);
+//
+//
+//                chatData = new ChattingData(imgURLSet, recordName, content, name, inOut,imgCheck);
+//                arrayList.add(chatData);
+//                chattingAdapter.notifyDataSetChanged();
+////                recyclerView.scrollToPosition(arrayList.size()-1);
 
-                inOut = 1;
-
-                chatData = new ChattingData(imgURLSet, recordName, content, name, inOut);
-                arrayList.add(chatData);
+                msg = handler.obtainMessage();
+                msg.what=1;
+                msg.obj=jsonArray.get(i);
+                handler.sendMessage(msg);
 
 
             }
@@ -611,7 +671,7 @@ public class Chatting extends AppCompatActivity {
                 .build();
 
         Request request = new Request.Builder()
-                .url("https://tazoapp.site/post/test/image")
+                .url("https://tazoapp.site/rooms/1/test/image")
                 .post(requestBody)
                 .build();
 
@@ -634,5 +694,78 @@ public class Chatting extends AppCompatActivity {
     }
 //   ********************************************************************************
 
+//    class SendChattingMessage extends AsyncTask
+//    {
+//        private String chattingMessage;
+//
+//        public SendChattingMessage (String chattingMessage) { this.chattingMessage = chattingMessage;}
+//        @Override
+//        protected Void doInBackground(Object... objects)
+//        {
+//            Log.d("sendChattingMessag","chatting");
+//            try {
+//                OkHttpClient client = new OkHttpClient();
+//                RequestBody formBody = new FormBody.Builder()
+//                        .add("content",chattingMessage).build();
+//                Request request = new Request.Builder()
+//                        .url("https://tazoapp.site/rooms/1/chat")
+//                        .post(formBody)
+//                        .build();
+//
+//                Response response = client.newCall(request).execute();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//            return null;
+//        }
+//    }
+
+    public class SenderThread2 extends Thread
+    {
+        private String chattingMessage;
+
+        public SenderThread2 (String chattingMessage)
+        {
+            this.chattingMessage = chattingMessage;
+        }
+
+        @Override
+        public void run()
+        {
+            Log.d("senderThread","senderThread start");
+
+            OkHttpClient client = new OkHttpClient();
+            RequestBody formBody = new FormBody.Builder()
+                    .add("content",chattingMessage).build();
+            Request request = new Request.Builder()
+                    .url("https://tazoapp.site/rooms/1/test/chat")
+                    .post(formBody)
+                    .build();
+
+//                Response response = client.newCall(request).execute();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e)
+                {
+                    System.out.println("연결 실패");
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException
+                {
+                    System.out.println("연결 성공");
+                    System.out.println(response);
+                }
+            });
+
+
+
+
+        }
+
+    }
 }
 

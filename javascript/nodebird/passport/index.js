@@ -11,7 +11,8 @@ module.exports = () => {
 
     // 매 요청시 실행 (passport.session 미들웨어가 이 메서드를 호출). 위의 doen의 두 번재 인수로 넣었던 데이터가 아래의 매개 변수로 사용
     passport.deserializeUser((id, done) => {
-        console.log(id)    
+        console.log(id);
+        console.log(User);    
         User.findOne( { where : { id } })   // 데이터베이스 조회. 
         .then(user => done(null, user)) // 조회한 정보를 user에 저장하고 이걸 req.user에 저장
         .catch(err => done(err));

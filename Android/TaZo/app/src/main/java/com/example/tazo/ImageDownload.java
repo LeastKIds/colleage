@@ -32,7 +32,8 @@ public class ImageDownload extends AppCompatActivity {
         imageSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Glide.with(ImageDownload.this).load(URL).into(imageTextView);
+//                Glide.with(ImageDownload.this).load(URL).into(();
+
             }
         });
 

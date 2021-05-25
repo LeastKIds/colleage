@@ -7,13 +7,15 @@ public class ChattingData {
     private String chattingText;
     private String myName;
     private int inOut;
+    private int imgCheck;
 
-    public ChattingData(String profile, String nickName, String chattingText, String myName, int inOut) {
+    public ChattingData(String profile, String nickName, String chattingText, String myName, int inOut, int imgCheck) {
         this.profile = profile;
         this.nickName = nickName;
         this.chattingText = chattingText;
         this.myName = myName;
         this.inOut = inOut;
+        this.imgCheck=imgCheck;
     }
 
     public String getProfile() {
@@ -47,4 +49,8 @@ public class ChattingData {
     public void setInOut(int inOut) { this.inOut = inOut; }
 
     public int getInOut() { return inOut; }
+
+    public void setImgCheck(int imgCheck) { this.imgCheck = imgCheck; }
+
+    public int getImgCheck() { return imgCheck; }
 }

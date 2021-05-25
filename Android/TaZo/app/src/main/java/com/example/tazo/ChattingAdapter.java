@@ -1,5 +1,6 @@
 package com.example.tazo;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
 
     private ArrayList<ChattingData> arrayList;
     private int inOut;
+    private int imgCheck;
 
     public ChattingAdapter(ArrayList<ChattingData> arrayList) {
         this.arrayList = arrayList;
@@ -28,25 +30,42 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
     public ChattingAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         inOut = viewType;
-        System.out.println("-------------------------------");
-        System.out.println("CahttingAdapter inOut : " + inOut);
         if(viewType == 0)
         {
-            System.out.println("veiwType = 0");
-            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list,parent,false);
-            CustomViewHolder holder = new CustomViewHolder(view);
-            return holder;
+//            if(imgCheck == 1)
+//            {
+//                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_your_img,parent,false);
+//                CustomViewHolder holder = new CustomViewHolder(view);
+//                return holder;
+//            } else {
+                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list,parent,false);
+                CustomViewHolder holder = new CustomViewHolder(view);
+                return holder;
+//            }
+
+
         } else if(viewType == 2)
         {
-            System.out.println("veiwType = 2");
             View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_in_out,parent,false);
             CustomViewHolder holder = new CustomViewHolder(view);
             return holder;
         } else {
-            System.out.println("viewType = 1");
-            View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my,parent,false);
-            CustomViewHolder holder = new CustomViewHolder(view);
-            return holder;
+            System.out.println("ChattingAdapter.CustonViewHolder 에서 imgCheck : " + imgCheck);
+//            if(imgCheck == 1)
+//            {
+//                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_img,parent,false);
+//                CustomViewHolder holder = new CustomViewHolder(view);
+//                return holder;
+//            }
+//            else
+//            {
+                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my,parent,false);
+                CustomViewHolder holder = new CustomViewHolder(view);
+                return holder;
+//            }
+
+//            CustomViewHolder holder = new CustomViewHolder(view);
+//            return holder;
         }
 
 
@@ -61,16 +80,19 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
 
         if(inOut == 2)
         {
-            System.out.println("nickname test");
-            System.out.println(arrayList.get(position).getNickName());
-            System.out.println("onBindViewHolder inOut : " + inOut);
             if(holder.nickName_first != null)
                 holder.nickName_first.setText(arrayList.get(position).getNickName()+"님 이 들어오셨습니다.");
         } else {
+//            if(imgCheck == 1)
+//            {
+////                Glide.with(holder.textViewImage).load(arrayList.get(position).getChattingText()).into(holder.textViewImage);
+//            }else {
+                holder.chattingText.setText(arrayList.get(position).getChattingText());
+//            }
 //            holder.profile.setImage(arrayList.get(position).getProfile());
             Glide.with(holder.profile).load(arrayList.get(position).getProfile()).into(holder.profile);
             holder.nickName.setText(arrayList.get(position).getNickName());
-            holder.chattingText.setText(arrayList.get(position).getChattingText());
+
 
 //            holder.itemView.setTag(position);
 //            holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +130,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
         protected TextView nickName;
         protected TextView chattingText;
         protected TextView nickName_first;
+        protected ImageView textViewImage;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,13 +138,16 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
             this.nickName=(TextView) itemView.findViewById(R.id.nickName);
             this.chattingText=(TextView) itemView.findViewById(R.id.chatting_text);
             this.nickName_first = (TextView) itemView.findViewById(R.id.nickName_first);
+            this.textViewImage= (ImageView) itemView.findViewById(R.id.textViewImage);
         }
     }
 
     @Override
     public int getItemViewType(int position) {
         ChattingData chattingData=arrayList.get(position);
-        System.out.println("inout : " +chattingData.getInOut() );
+        imgCheck = chattingData.getImgCheck();
+        System.out.println("getItemViewType에서 imgCheck : " + imgCheck);
+
         if (chattingData.getInOut() == 2)
             return 2;
         else if (chattingData.getNickName().equals(chattingData.getMyName()))
