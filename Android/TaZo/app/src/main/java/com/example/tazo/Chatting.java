@@ -57,7 +57,6 @@ public class Chatting extends AppCompatActivity {
 //  이미지 전송 버튼 **************************************
     private ImageButton imageButton;
     private String img_path;
-    private int imgCheckReceiver = 0;
 //  *****************************************************
 
 //  예전 채팅 기록 ****************************************
@@ -241,14 +240,12 @@ public class Chatting extends AppCompatActivity {
         public void handleMessage(Message msg){
 //            System.out.println("일단 handler는 실행 됨");
             String content,userName, profileURL;
+            int imgCheckReceiver;
             if(msg.what==1)
             {
-                String messageStr= (String) msg.obj;
+                JSONObject jsonStr = (JSONObject) msg.obj;
 //              여기서 제이슨으로 파싱해서 쪼갬 *************************************************
                 try {
-                    JSONParser jsonParser=new JSONParser();
-                    Object obj = jsonParser.parse(messageStr);
-                    JSONObject jsonStr=(JSONObject) obj;
 
                     content = (String) jsonStr.get("content");
                     JSONObject jsonUser = (JSONObject) jsonStr.get("User");
@@ -256,7 +253,10 @@ public class Chatting extends AppCompatActivity {
                     profileURL = (String) jsonUser.get("image");
                     if(profileURL == null)
                         profileURL="https://tazoapp.site/placeholder-profile.png";
-
+                    if(content.contains("https://storage.googleapis.com/tazo-bucket/uploads"))
+                        imgCheckReceiver=1;
+                    else
+                        imgCheckReceiver=0;
                     chatData = new ChattingData(profileURL, userName, content, name, inOut,imgCheckReceiver);
                     arrayList.add(chatData);
                     chattingAdapter.notifyDataSetChanged();
@@ -300,38 +300,38 @@ public class Chatting extends AppCompatActivity {
                     Object obj = jsonParser.parse(str);
                     JSONObject jsonStr=(JSONObject) obj;
 
-                    if(jsonStr.get("content") == null)
-                    {
-                        jsonStr = (JSONObject)jsonStr.get("User");
-                        nameCheck = (String) jsonStr.get("nickname");
-                        imgURL=(String) jsonStr.get("image");
-                        if(imgURL == null)
-                            imgURL = "https://tazoapp.site/placeholder-profile.png";
-//                        System.out.println(123123);
-                        System.out.println(nameCheck);
-                        str = nameCheck;
-//                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
-                        inOut=2;
-                    } else
-                    {
-                        if(((String)jsonStr.get("content")).contains("https://storage.googleapis.com/tazo-bucket/uploads"))
-                        {
-                            imgCheckReceiver=1;
-                        } else
-                        {
-                            imgCheckReceiver=0;
-                            str=(String)jsonStr.get("content");
-                            jsonStr = (JSONObject)jsonStr.get("User");
-                            nameCheck = (String) jsonStr.get("nickname");
-                        }
-                        inOut = 1;
-                    }
+//                    if(jsonStr.get("content") == null)
+//                    {
+//                        jsonStr = (JSONObject)jsonStr.get("User");
+//                        nameCheck = (String) jsonStr.get("nickname");
+//                        imgURL=(String) jsonStr.get("image");
+//                        if(imgURL == null)
+//                            imgURL = "https://tazoapp.site/placeholder-profile.png";
+////                        System.out.println(123123);
+//                        System.out.println(nameCheck);
+//                        str = nameCheck;
+////                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
+//                        inOut=2;
+//                    } else
+//                    {
+//                        if(((String)jsonStr.get("content")).contains("https://storage.googleapis.com/tazo-bucket/uploads"))
+//                        {
+////                            imgCheckReceiver=1;
+//                        } else
+//                        {
+////                            imgCheckReceiver=0;
+//                            str=(String)jsonStr.get("content");
+//                            jsonStr = (JSONObject)jsonStr.get("User");
+//                            nameCheck = (String) jsonStr.get("nickname");
+//                        }
+//                        inOut = 1;
+//                    }
 
 
 
                     msg = handler.obtainMessage();
                     msg.what=1;
-                    msg.obj=str;
+                    msg.obj=jsonStr;
                     handler.sendMessage(msg);
 
 
