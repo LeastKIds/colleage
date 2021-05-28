@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -300,32 +302,18 @@ public class Chatting extends AppCompatActivity {
                     Object obj = jsonParser.parse(str);
                     JSONObject jsonStr=(JSONObject) obj;
 
-//                    if(jsonStr.get("content") == null)
-//                    {
-//                        jsonStr = (JSONObject)jsonStr.get("User");
-//                        nameCheck = (String) jsonStr.get("nickname");
-//                        imgURL=(String) jsonStr.get("image");
-//                        if(imgURL == null)
-//                            imgURL = "https://tazoapp.site/placeholder-profile.png";
-////                        System.out.println(123123);
-//                        System.out.println(nameCheck);
-//                        str = nameCheck;
-////                        str = "#" + jsonStr.get("nickname") + "님이 들어오셨습니다.";
-//                        inOut=2;
-//                    } else
-//                    {
-//                        if(((String)jsonStr.get("content")).contains("https://storage.googleapis.com/tazo-bucket/uploads"))
-//                        {
-////                            imgCheckReceiver=1;
-//                        } else
-//                        {
-////                            imgCheckReceiver=0;
-//                            str=(String)jsonStr.get("content");
-//                            jsonStr = (JSONObject)jsonStr.get("User");
-//                            nameCheck = (String) jsonStr.get("nickname");
-//                        }
-//                        inOut = 1;
-//                    }
+                    if(socket.isClosed())
+                    {
+                        Handler mHandler = new Handler(Looper.getMainLooper());
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 사용하고자 하는 코드
+                                Toast.makeText(getApplicationContext(),"서버 끊김",Toast.LENGTH_LONG).show();
+                            }
+                        }, 0);
+                    }
+
 
 
 
@@ -431,6 +419,18 @@ public class Chatting extends AppCompatActivity {
 
 //                ---------------------------------------------------
                 Socket socket = new Socket("10.0.2.2", 7777);
+//                if(!socket.isClosed())
+//                {
+//                    Handler mHandler = new Handler(Looper.getMainLooper());
+//                    mHandler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // 사용하고자 하는 코드
+//                            Toast.makeText(getApplicationContext(),"서버 연결",Toast.LENGTH_SHORT).show();
+//                        }
+//                    }, 0);
+//                }
+
                 ReceiverThread thread1 = new ReceiverThread(socket);
                 SenderThread thread2 = new SenderThread(socket,name);
                 thread1.start();
@@ -438,13 +438,18 @@ public class Chatting extends AppCompatActivity {
 
                 while(true)
                 {
-                    if(socketCloseNumber2==1)
-                    {
-                        socket.close();
-                        break;
-                    }
-
+                    System.out.println("connected : " + socket.isConnected());
                 }
+
+//                while(true)
+//                {
+//                    if(socketCloseNumber2==1)
+//                    {
+//                        socket.close();
+//                        break;
+//                    }
+//
+//                }
 
             } catch (UnknownHostException e) {
                 e.printStackTrace();
@@ -516,7 +521,7 @@ public class Chatting extends AppCompatActivity {
 
     public void setRecord(String recordMessage)
     {
-        int imgCheck=0;
+//        int imgCheck=0;
 
         try {
             JSONParser jsonParser = new JSONParser();
@@ -525,36 +530,6 @@ public class Chatting extends AppCompatActivity {
 
             for(int i=0; i<jsonArray.size(); i++)
             {
-//                System.out.println(jsonArray.get(i));
-//                System.out.println("--------------------");
-//                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-//                String content = (String) jsonObject.get("content");
-//
-//                if(content.contains("https://storage.googleapis.com/tazo-bucket/uploads"))
-//                {
-//                    if(content.contains("https://storage.googleapis.com/tazo-bucket/uploads/1621929381665_image.jpg"))
-//                        System.out.println("상대편 이미지가 오긴 옮");
-//                    imgCheck=1;
-//                }else
-//                    imgCheck=0;
-//                JSONObject nameJson = (JSONObject) jsonObject.get("User");
-//                String recordName = (String) nameJson.get("nickname");
-//                String imgURLSet= (String) nameJson.get("image");
-//                if(imgURLSet == null)
-//                    imgURLSet = "https://tazoapp.site/placeholder-profile.png";
-//                System.out.println("nickname : " + recordName);
-//                System.out.println("content : " + content);
-//                System.out.println("imgURLSet : " + imgURLSet);
-//
-//                inOut = 1;
-//
-//                recyclerView.setLayoutManager(linearLayout);
-//
-//
-//                chatData = new ChattingData(imgURLSet, recordName, content, name, inOut,imgCheck);
-//                arrayList.add(chatData);
-//                chattingAdapter.notifyDataSetChanged();
-////                recyclerView.scrollToPosition(arrayList.size()-1);
 
                 msg = handler.obtainMessage();
                 msg.what=1;
@@ -635,30 +610,6 @@ public class Chatting extends AppCompatActivity {
             }
 
         }
-//        if(requestCode == 1)
-//        {
-//            if(data == null) {}
-//            else {
-//                if(data.getClipData() == null)  Toast.makeText(this, "다중 선택 불가능", Toast.LENGTH_SHORT).show();
-//                else {
-//                    ClipData clipData = data.getClipData();
-//                    Log.i("clipData",String.valueOf(clipData.getItemCount()));
-//
-//                    if(clipData.getItemCount() > 5) Toast.makeText(this,"사진은 5장 까지",Toast.LENGTH_SHORT).show();
-//                    else if (clipData.getItemCount() == 1) {
-//                        img_path = getPath(this, data.getData());
-//                        goSend(img_path);
-//                    }
-//                    else if (clipData.getItemCount() > 1 && clipData.getItemCount() <=5) {
-//                        for (int i=0; i<clipData.getItemCount(); i++)
-//                        {
-//                            img_path = getPath(this, clipData.getItemAt(i).getUri());
-//                            System.out.println(img_path);
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 //  *************************************************************************************
 //  사진 보내기 **************************************************************************

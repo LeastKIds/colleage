@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private Button testPage;
     private Button imageUpload;
     private Button imageDownload;
+    private Button forground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        forground = (Button) findViewById(R.id.foregroundService);
+        forground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ForegroundService.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }

@@ -38,6 +38,11 @@
             android:layout_height="wrap_content"
             android:text="ImageDownload"
             android:id="@+id/ImageDownload"/>
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Foreground"
+            android:id="@+id/foregroundService" />
 
         <Button
             android:layout_width="300dp"
