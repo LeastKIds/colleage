@@ -7,6 +7,9 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
+import java.net.Socket;
+
 public class SocketService extends Service {
     public SocketService() {}
 
@@ -28,6 +31,14 @@ public class SocketService extends Service {
         Log.d("Boot","SocketService.onStartCommand()");
         if(intent == null)  return Service.START_STICKY;
         else    Log.d("Boot","SocketService.onStartCommand().else");
+
+
+//        try {
+//            Socket socket = new Socket("10.0.2.2", 7777);
+//            Log.d("Boot","socket start...");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
 
         return super.onStartCommand(intent, flags, startId);

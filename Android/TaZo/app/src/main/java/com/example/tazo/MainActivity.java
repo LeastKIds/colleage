@@ -3,6 +3,8 @@ package com.example.tazo;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -80,4 +82,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    public boolean isServiceRunningCheck() {
+        ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if ("SocketService".equals(service.service.getClassName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
 }

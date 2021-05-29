@@ -43,7 +43,7 @@ class EachClientThread extends Thread {
 
 	public EachClientThread(Socket socket) {
 		this.socket = socket;
-		try {
+		try {	
 			// getOutputStream : 출력 스트림 받아오기.
 			// 이걸로 채팅 하는 사람을 구분하는 값을 가져옴.
 			// 그 값을 list에 넣어서 보관.

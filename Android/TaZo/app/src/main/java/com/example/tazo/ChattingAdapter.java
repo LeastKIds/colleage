@@ -29,8 +29,8 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
     @Override
     public ChattingAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        inOut = viewType;
-        if(viewType == 0)
+//        inOut = viewType;
+        if(inOut == 0)
         {
             if(imgCheck == 1)
             {
@@ -44,7 +44,7 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
             }
 
 
-        } else if(viewType == 2)
+        } else if(inOut == 2)
         {
             View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_in_out,parent,false);
             CustomViewHolder holder = new CustomViewHolder(view);
@@ -85,9 +85,11 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
         } else {
             if(imgCheck == 1)
             {
-                Glide.with(holder.textViewImage).load(arrayList.get(position).getChattingText()).into(holder.textViewImage);
+                if(holder.textViewImage != null)
+                 Glide.with(holder.textViewImage).load(arrayList.get(position).getChattingText()).into(holder.textViewImage);
             }else {
-                holder.chattingText.setText(arrayList.get(position).getChattingText());
+                if(holder.chattingText !=null)
+                    holder.chattingText.setText(arrayList.get(position).getChattingText());
             }
 //            holder.profile.setImage(arrayList.get(position).getProfile());
             Glide.with(holder.profile).load(arrayList.get(position).getProfile()).into(holder.profile);
@@ -146,13 +148,22 @@ public class ChattingAdapter extends RecyclerView.Adapter<ChattingAdapter.Custom
     public int getItemViewType(int position) {
         ChattingData chattingData=arrayList.get(position);
         imgCheck = chattingData.getImgCheck();
-        System.out.println("getItemViewType에서 imgCheck : " + imgCheck);
+//        inOut=chattingData.getInOut();
 
-        if (chattingData.getInOut() == 2)
-            return 2;
+        if(chattingData.getInOut() == 2)
+            inOut=2;
         else if (chattingData.getNickName().equals(chattingData.getMyName()))
-            return 1;
+            inOut=1;
         else
-            return 0;
+            inOut=0;
+        System.out.println("getItemViewType에서 imgCheck : " + imgCheck);
+        return position;
+
+//        if (chattingData.getInOut() == 2)
+//            return 2;
+//        else if (chattingData.getNickName().equals(chattingData.getMyName()))
+//            return 1;
+//        else
+//            return 0;
     }
 }

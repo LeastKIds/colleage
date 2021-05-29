@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +46,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import okhttp3.Call;
@@ -91,7 +94,7 @@ public class Chatting extends AppCompatActivity {
     private Button send_button_test;
     private EditText message_edit_test;
     String sumStr="";
-    String name="닉네임1";
+    String name="무무무야";
     String nameCheck="";
     String imgURL="";
     int inOut=-1;
@@ -109,9 +112,12 @@ public class Chatting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
 
+
+
 //      AsyncTask 활용해서 소켓 실행 ***************************************************
         HttpAsyncTask httpAsyncTask = new HttpAsyncTask(record);
         try {
+            System.out.println("error");
             record =httpAsyncTask.execute("https://tazoapp.site/rooms/1/chat").get();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -418,28 +424,13 @@ public class Chatting extends AppCompatActivity {
             try{
 
 //                ---------------------------------------------------
+                Log.d("Boot","socekt 실행");
                 Socket socket = new Socket("10.0.2.2", 7777);
-//                if(!socket.isClosed())
-//                {
-//                    Handler mHandler = new Handler(Looper.getMainLooper());
-//                    mHandler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            // 사용하고자 하는 코드
-//                            Toast.makeText(getApplicationContext(),"서버 연결",Toast.LENGTH_SHORT).show();
-//                        }
-//                    }, 0);
-//                }
-
+                
                 ReceiverThread thread1 = new ReceiverThread(socket);
                 SenderThread thread2 = new SenderThread(socket,name);
                 thread1.start();
                 thread2.start();
-
-                while(true)
-                {
-                    System.out.println("connected : " + socket.isConnected());
-                }
 
 //                while(true)
 //                {
