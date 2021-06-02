@@ -27,16 +27,16 @@ public class BootReceiver extends BroadcastReceiver {
 //            context.startActivity(it);
             Log.d("Boot1Receiver","Service loaded at start..");
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            {
-                context.startForegroundService(it);
-                Log.d("Boot1","BootReceier.onReceive.if");
-            }
-            else
-            {
-                context.startService(it);
-                Log.d("Boot1","MyAutoRunApp.onReceive.else");
-            }
+//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//            {
+//                context.startForegroundService(it);
+//                Log.d("Boot1","BootReceier.onReceive.if");
+//            }
+//            else
+//            {
+//                context.startService(it);
+//                Log.d("Boot1","MyAutoRunApp.onReceive.else");
+//            }
 
 
         }

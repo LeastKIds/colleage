@@ -6,7 +6,7 @@ import java.io.*;
 public class HttpURLPostTest {
     public static void main(String[] args) throws Exception
     {
-        String site = "http://localhost:8080/board/test";
+        String site = "http://localhost:9090/todos";
 
         URL url=new URL(site);
 
@@ -15,7 +15,7 @@ public class HttpURLPostTest {
         con.setDoInput(true);
         con.setDoOutput(true);
 
-        con.setRequestProperty("content-type", "application/x-www/form-urlencoded");
+        con.setRequestProperty("content-type", "application/x-www-form-urlencoded");
 
         String data = "id=scpark&pw=1111";
         // StringBuffer buffer = new StringBuffer();   // 계속 문자값을 이어갈 때 StringBuffer가 속도가 훨씬 빠르다

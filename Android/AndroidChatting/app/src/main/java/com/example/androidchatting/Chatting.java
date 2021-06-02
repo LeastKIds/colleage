@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -112,6 +113,26 @@ public class Chatting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
 
+//        Intent socketServiceIntent = new Intent(this, SocketService.class);
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//        {
+//            this.startForegroundService(socketServiceIntent);
+//            Log.d("Boot2","BootReceier.onReceive.if");
+//        }
+//        else
+//        {
+//            this.startService(socketServiceIntent);
+//            Log.d("Boot2","MyAutoRunApp.onReceive.else");
+//        }
+
+        Intent socketServiceIntent = new Intent(this,SocketService.class);
+        socketServiceIntent.setAction("startForground");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(socketServiceIntent);
+            Log.d("Boot2","startForegroundService start");
+        } else {
+            startService(socketServiceIntent);
+        }
 
 
 //      AsyncTask 활용해서 소켓 실행 ***************************************************
@@ -413,32 +434,32 @@ public class Chatting extends AppCompatActivity {
 
 
 //            System.out.println("AsyncTask 실행중");
-            try{
-
-//                ---------------------------------------------------
-                Log.d("Boot","socekt 실행");
-                Socket socket = new Socket("10.0.2.2", 7777);
-
-                ReceiverThread thread1 = new ReceiverThread(socket);
-                SenderThread thread2 = new SenderThread(socket,name);
-                thread1.start();
-                thread2.start();
-
-//                while(true)
-//                {
-//                    if(socketCloseNumber2==1)
-//                    {
-//                        socket.close();
-//                        break;
-//                    }
+//            try{
 //
-//                }
-
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+////                ---------------------------------------------------
+//                Log.d("Boot","socekt 실행");
+//                Socket socket = new Socket("10.0.2.2", 7777);
+//
+//                ReceiverThread thread1 = new ReceiverThread(socket);
+//                SenderThread thread2 = new SenderThread(socket,name);
+//                thread1.start();
+//                thread2.start();
+//
+////                while(true)
+////                {
+////                    if(socketCloseNumber2==1)
+////                    {
+////                        socket.close();
+////                        break;
+////                    }
+////
+////                }
+//
+//            } catch (UnknownHostException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             return null;
         }
     }

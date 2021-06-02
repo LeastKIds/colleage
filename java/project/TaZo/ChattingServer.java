@@ -105,6 +105,8 @@ class EachClientThread extends Thread {
 					break;
 				}
 
+				
+
 				JSONParser jsonParser=new JSONParser();
 				Object obj2 = jsonParser.parse(str);
 				JSONObject jsonStr=(JSONObject) obj2;
