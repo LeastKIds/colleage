@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TaZo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ForegroundService"></activity>
+        <activity android:name=".Setting"></activity>
+        <activity android:name=".ForegroundService" />
         <activity android:name=".ImageDownload" />
         <activity android:name=".ImageUpload" /> <!-- <activity android:name=".item_My"></activity> -->
         <meta-data
@@ -32,16 +33,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".MusicService"/>
 
-        <receiver android:name=".BootReceiver"
+        <service android:name=".MusicService" />
+
+        <receiver
+            android:name=".BootReceiver"
             android:enabled="true"
             android:exported="false"
             android:label="BOOTReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <service android:name=".SocketService" />
     </application>
 

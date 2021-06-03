@@ -7,9 +7,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -45,9 +48,9 @@ public class SocketService extends Service {
     private Message msg;
     private Context context;
 
-    private TextView notification_nickName;
-    private ImageView notification_profile;
-    private TextView notification_text;
+    private SocketThread socketThread;
+
+    private boolean stopThread=true;
 
     public SocketService() {
 
@@ -62,6 +65,9 @@ public class SocketService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(sBroadcastReceiver,
+                new IntentFilter("socketClose"));
         Log.d("Boot1", "SocketService.onCreate()");
     }
 
@@ -118,7 +124,8 @@ public class SocketService extends Service {
                 Log.d("Boot2", "BufferReader");
                 BufferedReader readerOut = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 
-                while (true) {
+                while (stopThread) {
+
 
                     String str = readerOut.readLine();
 
@@ -126,11 +133,6 @@ public class SocketService extends Service {
                     JSONParser jsonParser = new JSONParser();
                     Object obj = jsonParser.parse(str);
                     JSONObject jsonStr = (JSONObject) obj;
-
-//                    String content = (String) jsonStr.get("content");
-//                    JSONObject jsonUser = (JSONObject) jsonStr.get("User");
-//                    String userName = (String) jsonUser.get("nickname");
-//                    String profileURL = (String) jsonUser.get("image");
 
 
 
@@ -173,7 +175,7 @@ public class SocketService extends Service {
 
         startForeground(1, builder.build());
 
-        SocketThread socketThread = new SocketThread();
+        socketThread = new SocketThread();
         socketThread.start();
 
 
@@ -230,9 +232,12 @@ public class SocketService extends Service {
                         startForeground(1, builder.build());
                     } else {
                         System.out.println("여긴 채팅 방 안이야");
-                        Intent intent = new Intent(getApplicationContext(),Chatting.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("Json",jsonStr);
+                        Intent intent = new Intent("chattingReceiver");
+                        String str=jsonStr.toString();
+                        intent.putExtra("jsonStr", str);
+
+
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     }
 
 
@@ -263,5 +268,15 @@ public class SocketService extends Service {
         String ActivityName = componentName.getShortClassName().substring(1);
         return ActivityName;
     }
+
+    private BroadcastReceiver sBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println("**************************");
+            System.out.println("종료할꺼야");
+            stopThread=false;
+
+        }
+    };
 
 }

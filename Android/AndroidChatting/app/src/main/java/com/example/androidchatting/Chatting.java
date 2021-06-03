@@ -1,19 +1,23 @@
 package com.example.androidchatting;
 
+import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -100,11 +104,12 @@ public class Chatting extends AppCompatActivity {
     String imgURL="";
     int inOut=-1;
 
-    ReceiverThread thread1;
+//    ReceiverThread thread1;
 
     ChattingData chatData;
 
-
+    private Context context=this;
+    private Intent socketServiceIntent;
 
 
     @SuppressLint("WrongViewCast")
@@ -127,16 +132,31 @@ public class Chatting extends AppCompatActivity {
 //            Log.d("Boot2","MyAutoRunApp.onReceive.else");
 //        }
 
-        Intent socketServiceIntent = new Intent(this,SocketService.class);
-        socketServiceIntent.setAction("startForground");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(socketServiceIntent);
-            Log.d("Boot2","startForegroundService start");
-        } else {
-            startService(socketServiceIntent);
-        }
+//        *********************************************************************
+//      백그라운드 서비스 등록
+            String className = SocketService.class.getName();
+            if(!isServiceRunning(className))
+            {
+                socketServiceIntent = new Intent(this,SocketService.class);
+                socketServiceIntent.setAction("startForground");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(socketServiceIntent);
+                    Log.d("Boot2","startForegroundService start");
+                } else {
+                    startService(socketServiceIntent);
+                }
+            }
 
-        
+
+
+
+//      *************************************************************************
+
+//       ************************************************************************
+//        서비스에서 데이터 받아오는 준비
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver,
+                new IntentFilter("chattingReceiver"));
+
 
 
 
@@ -184,7 +204,9 @@ public class Chatting extends AppCompatActivity {
             }
         });
 
-        Button socketClose = (Button) findViewById(R.id.socketClose);
+
+//        ********************************************************************
+
 //      ********************************************************************************
 
 //      상단 바 없애기 *******************************************************************
@@ -197,8 +219,7 @@ public class Chatting extends AppCompatActivity {
         message_edit_test = (EditText) findViewById(R.id.message_edit_test);
 
 
-        ConectNet conectNet = new ConectNet(name);
-        conectNet.execute();
+
 
         recyclerView = (RecyclerView) findViewById(R.id.chatting_test);
         linearLayout = new LinearLayoutManager(this);
@@ -238,15 +259,16 @@ public class Chatting extends AppCompatActivity {
 //  *********************************************************************************
 
 
-//        recyclerView.scrollToPosition(ChattingAdapter.getItemCount()-1);
 
 //  뒤로 나가기 **************************************************************
         socketClose = (Button) findViewById(R.id.socketClose);
         socketClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("socket close button");
-                socketCloseNumber=1;
+                Intent intent = new Intent("socketClose");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                stopService(socketServiceIntent);
                 onBackPressed();
             }
         });
@@ -306,169 +328,13 @@ public class Chatting extends AppCompatActivity {
 
 
 
-//                chatData = new ChattingData(imgURL, nameCheck, messageStr, name, inOut,imgCheckReceiver);
-//                arrayList.add(chatData);
-//                chattingAdapter.notifyDataSetChanged();
-//                recyclerView.scrollToPosition(arrayList.size()-1);
+
 
             }
 
         }
     };
 
-    class ReceiverThread extends Thread {
-        Socket socket;
-        public ReceiverThread(Socket socket) {
-            this.socket = socket;
-        }
-
-        @Override
-        public void run() {
-
-            System.out.println("ReceiverThread 실행");
-            try {
-                // Input 상대방 내용이 나에게 들어올 때.
-                BufferedReader readerOut = new BufferedReader(new InputStreamReader(socket.getInputStream(),"utf-8"));
-                while (true) {
-
-                    String str = readerOut.readLine();
-
-                    JSONParser jsonParser=new JSONParser();
-                    Object obj = jsonParser.parse(str);
-                    JSONObject jsonStr=(JSONObject) obj;
-
-
-
-
-
-
-                    msg = handler.obtainMessage();
-                    msg.what=1;
-                    msg.obj=jsonStr;
-                    handler.sendMessage(msg);
-
-
-
-                }
-
-            }
-
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-    }
-
-    public class SenderThread extends Thread
-    {
-        PrintWriter writer;
-        String name;
-        Socket socket;
-
-        public SenderThread (Socket socket, String name)
-        {
-            this.socket = socket;
-            this.name = name;
-        }
-
-        @Override
-        public void run()
-        {
-            Log.d("senderThread","senderThread start");
-            System.out.println("SenderThread 실행 중");
-
-            try{
-                BufferedReader readerIn = new BufferedReader(new InputStreamReader(System.in, "utf-8"));
-
-                writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),"utf-8"));
-
-                // 제일 먼저 서버로 대화명을 송신합니다.
-                // 맨 먼저 간 값이 닉네임이 되기 때문.
-
-                JSONObject jsonName = new JSONObject();
-                jsonName.put("nickname",name);
-                JSONObject jsonName2=new JSONObject();
-                jsonName2.put("User",jsonName);
-
-
-                writer.println(jsonName2);
-                writer.flush();
-                System.out.println("이름 보냇음");
-                while(true)
-                {
-                    if(testNum==1)
-                    {
-                        System.out.println(jsonObject);
-
-                        writer.println(jsonObject);
-                        writer.flush();
-                        testNum=0;
-                    }
-
-                    if(socketCloseNumber==1)
-                    {
-                        writer.println(name + " 종료합니다.");
-                        writer.flush();
-                        socketCloseNumber2=1;
-                        break;
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-
-
-        }
-
-    }
-
-
-    public class ConectNet extends AsyncTask
-    {
-        String name;
-        public ConectNet(String name)
-        {
-            this.name=name;
-        }
-
-        @Override
-        protected Void doInBackground(Object[] objects) {
-
-
-//            System.out.println("AsyncTask 실행중");
-//            try{
-//
-////                ---------------------------------------------------
-//                Log.d("Boot","socekt 실행");
-//                Socket socket = new Socket("10.0.2.2", 7777);
-//
-//                ReceiverThread thread1 = new ReceiverThread(socket);
-//                SenderThread thread2 = new SenderThread(socket,name);
-//                thread1.start();
-//                thread2.start();
-//
-////                while(true)
-////                {
-////                    if(socketCloseNumber2==1)
-////                    {
-////                        socket.close();
-////                        break;
-////                    }
-////
-////                }
-//
-//            } catch (UnknownHostException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            return null;
-        }
-    }
 
 
 
@@ -653,35 +519,7 @@ public class Chatting extends AppCompatActivity {
             }
         });
     }
-//   ********************************************************************************
 
-//    class SendChattingMessage extends AsyncTask
-//    {
-//        private String chattingMessage;
-//
-//        public SendChattingMessage (String chattingMessage) { this.chattingMessage = chattingMessage;}
-//        @Override
-//        protected Void doInBackground(Object... objects)
-//        {
-//            Log.d("sendChattingMessag","chatting");
-//            try {
-//                OkHttpClient client = new OkHttpClient();
-//                RequestBody formBody = new FormBody.Builder()
-//                        .add("content",chattingMessage).build();
-//                Request request = new Request.Builder()
-//                        .url("https://tazoapp.site/rooms/1/chat")
-//                        .post(formBody)
-//                        .build();
-//
-//                Response response = client.newCall(request).execute();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//            return null;
-//        }
-//    }
 
     public class SenderThread2 extends Thread
     {
@@ -728,5 +566,50 @@ public class Chatting extends AppCompatActivity {
         }
 
     }
+
+//   *********************************************************************************
+//    로컬 브로드 캐스트 (서비스랑 액티비티 사이를 연결
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                String str = intent.getStringExtra("jsonStr");
+                JSONParser jsonParser=new JSONParser();
+                Object obj = jsonParser.parse(str);
+                JSONObject jsonStr=(JSONObject) obj;
+
+                msg = handler.obtainMessage();
+                msg.what=1;
+                msg.obj=jsonStr;
+                handler.sendMessage(msg);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+    }
+
+//   ****************************************************************************************
+//    서비스 실행 여부 확인
+    public Boolean isServiceRunning(String class_name)
+    {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if(class_name.equals(service.service.getClassName()))
+             return true;
+        }
+
+        return false;
+    }
+
 }
 
