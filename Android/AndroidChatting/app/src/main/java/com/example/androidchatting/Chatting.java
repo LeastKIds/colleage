@@ -95,7 +95,7 @@ public class Chatting extends AppCompatActivity {
     private Button send_button_test;
     private EditText message_edit_test;
     String sumStr="";
-    String name="무무무야";
+    String name="sexyboy";
     String nameCheck="";
     String imgURL="";
     int inOut=-1;
@@ -112,6 +112,8 @@ public class Chatting extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
+
+
 
 //        Intent socketServiceIntent = new Intent(this, SocketService.class);
 //        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -133,6 +135,10 @@ public class Chatting extends AppCompatActivity {
         } else {
             startService(socketServiceIntent);
         }
+
+        
+
+
 
 
 //      AsyncTask 활용해서 소켓 실행 ***************************************************
