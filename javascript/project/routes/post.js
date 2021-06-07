@@ -38,6 +38,7 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
   try {
     console.log(req.user);
     const post = await Post.create({
+      title : req.body.title,
       content: req.body.content,
       img: req.body.url,
       UserId: req.user.id,

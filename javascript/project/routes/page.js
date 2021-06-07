@@ -1,6 +1,7 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const { Post, User, Hashtag } = require('../models');
+const { addListener } = require('nodemon');
 
 const router = express.Router();
 
@@ -13,11 +14,11 @@ router.use((req, res, next) => {
 });
 
 router.get('/profile', isLoggedIn, (req, res) => {
-  res.render('profile', { title: '내 정보 - NodeBird' });
+  res.render('profile', { title: '내 정보' });
 });
 
 router.get('/join', isNotLoggedIn, (req, res) => {
-  res.render('join', { title: '회원가입 - NodeBird' });
+  res.render('join', { title: '회원가입' });
 });
 
 router.get('/', async (req, res, next) => {
@@ -30,7 +31,7 @@ router.get('/', async (req, res, next) => {
       order: [['createdAt', 'DESC']],
     });
     res.render('main', {
-      title: 'NodeBird',
+      title: '메인화면',
       twits: posts,
     });
   } catch (err) {
@@ -52,7 +53,7 @@ router.get('/hashtag', async (req, res, next) => {
     }
 
     return res.render('main', {
-      title: `${query} | NodeBird`,
+      title: `${query} | 해시태그`,
       twits: posts,
     });
   } catch (error) {
@@ -60,5 +61,8 @@ router.get('/hashtag', async (req, res, next) => {
     return next(error);
   }
 });
+
+
+
 
 module.exports = router;
