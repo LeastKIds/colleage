@@ -9,32 +9,46 @@ public class DateServer {
     {
         try (ServerSocket serverSocket = new ServerSocket(9100)) {
             
-            Socket socket = null;
             while(true)
             {
-                try {
-                    System.out.println("클라이언트의 요청을 기다립니다.");
+                Socket socket = serverSocket.accept();
 
-                socket = serverSocket.accept();
-                System.out.println("새로운 클라이언트 접속... [" + socket.getRemoteSocketAddress() + "]");
-
-                OutputStream outStream = socket.getOutputStream();
-                PrintWriter writer = new PrintWriter(outStream,true);
-                writer.println(Calendar.getInstance().getTime());
-           
-
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                } finally {
-                    socket.close();
-                }
+                Thread thread = new NewSocket(socket);
+                thread.start();
             }
         } catch(Exception e)
         {
             e.printStackTrace();
         }
+
+        
                   
         
+    }
+}
+
+class NewSocket extends Thread {
+    Socket socket;
+
+    public NewSocket(Socket socket)
+    {
+        this.socket = socket;
+    }
+    public void run() {
+        try {
+            OutputStream outStream = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(outStream,true);
+            writer.println(Calendar.getInstance().getTime());
+       
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        } finally {
+            try { 
+                Thread.sleep(10000);
+                socket.close();
+                System.out.println("클라이언트와 접속을 종료합니다");
+            } catch(Exception e) {}
+        }
     }
 }
