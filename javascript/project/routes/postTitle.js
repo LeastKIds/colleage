@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, User, Hashtag, Comment } = require('../models');
+const { Post, User, Comment } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 const { addListener } = require('process');
 
@@ -99,9 +99,6 @@ router.get('/:id',isLoggedIn, async (req,res,next) => {
         order: [['createdAt']],
         where : { PostId : req.query.twitId }
       });
-
-      console.log('--------------------------------');
-      console.log(req.user.id);
 
       res.render('postTitle', { 
          title: '게시판',

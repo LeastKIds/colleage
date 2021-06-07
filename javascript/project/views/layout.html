@@ -17,10 +17,9 @@
               <a id="my-profile" href="/profile" class="btn">자기소개</a>
             </div>
             <div class="half">
-              <a id="logout" href="/auth/logout" class="btn">현지 학기제</a>
+              <a id="logout" href="/introduction" class="btn">현지 학기제</a>
             </div>
           <input id="my-id" type="hidden" value="{{user.id}}">
-          <a id="my-profile" href="/profile" class="btn">내 프로필</a>
           <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
         {% else %}
           <form id="login-form" action="/auth/login" method="post">
@@ -38,7 +37,7 @@
           </form>
         {% endif %}
         </div>
-      
+        
       </div>
       {% block content %}
       {% endblock %}
