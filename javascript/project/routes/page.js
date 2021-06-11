@@ -39,14 +39,16 @@ router.get('/', async (req, res, next) => {
 
 
 router.post('/search', async(req,res,next) => {
-  const keyword=req.body.searchData;
+  const keyword=req.body.search;
   try{
     const post = await Post.findAll({
       where : {title : {[Op.like] : '%'+keyword+'%' } },
     });
 
-    console.log('adfafdasdfafasfd');
-    res.json({searchData : '잘왔습니다.'});
+    res.render('search',{
+      title : '검색 결과',
+      twits : post,
+    })
   } catch(error)
   {
     console.error(error);
