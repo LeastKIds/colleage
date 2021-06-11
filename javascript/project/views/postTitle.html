@@ -10,7 +10,7 @@
               <input type="hidden" value="{{twit.id}}" class="twit-id">
               <div class="twit-title" >
                 
-            <div class="twit-author">제목 : {{twit.title}}</div>
+            <div id="titleSetting" class="twit-author">제목 : {{twit.title}}</div>
             <hr>
               </div>
               
@@ -47,7 +47,7 @@
           
    
 
-       
+       {% if twit.UserId == user.id or user.id == 1 %}
         <div>
           <form id="twit-form" action="/postTitle/create" method="post">
             
@@ -62,22 +62,38 @@
             </div>
           </form>
         </div>
-
+      {% endif %}
         
         <div>
-          {% if twit.UserId === user.id %}
+          {% if twit.UserId === user.id  or user.id ==1 %}
           <form action="/postTitle/delete" method="post">
             <input type="hidden" value="{{twit.id}}" name="postId">
             <button id = "twit-btn" type="submit" class="btn">삭제</button>
           </form>
+          {% if twit.UserId === user.id %}
           <form action="/postTitle/alter" method="post">
-            <!-- <button id = "twit-btn" type="submit" class="btn">수정</button> -->
+            <input type="hidden" name="postId" value="{{twit.id}}">
+            <button id = "twit-btn" type="submit" class="btn">수정</button>
           </form>
           {% endif %}
         </div>
-
+        {% endif %}
         
         
       </div>
     </div>
+{% endblock %}
+
+{% block script %}
+<script>
+  (async () => {
+    try{
+      const result = await axios.get('/postTitle');
+      document.getElementById('titleSetting').innerText='adf';
+    } catch (error)
+    {
+      console.error(error);
+    }
+  })
+</script>
 {% endblock %}

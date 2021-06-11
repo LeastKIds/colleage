@@ -37,23 +37,27 @@ const upload2 = multer();
 router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
   try {
     console.log(req.user);
-    const post = await Post.create({
-      title : req.body.title,
-      content: req.body.content,
-      img: req.body.url,
-      UserId: req.user.id,
-    });
-    // const hashtags = req.body.content.match(/#[^\s#]*/g);
-    // if (hashtags) {
-    //   const result = await Promise.all(
-    //     hashtags.map(tag => {
-    //       return Hashtag.findOrCreate({
-    //         where: { title: tag.slice(1).toLowerCase() },
-    //       })
-    //     }),
-    //   );
-    //   await post.addHashtags(result.map(r => r[0]));
-    // }
+    
+    if(req.body.check ==1 )
+    {
+      const post = await Post.create({
+        title : req.body.title,
+        content: req.body.content,
+        img: req.body.url,
+        UserId: req.user.id,
+      });
+    }else if(req.body.check ==2 )
+    {
+      const post= await Post.update({
+        title : req.body.title,
+        content: req.body.content,
+        img: req.body.url,
+      }, {where : { id : req.body.postId }} );
+    }
+      
+    
+    
+    
     res.redirect('/');
   } catch (error) {
     console.error(error);

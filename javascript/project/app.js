@@ -30,7 +30,7 @@ nunjucks.configure('views', {
   express: app,
   watch: true,
 });
-sequelize.sync({alter : true })
+sequelize.sync({force : false })
   .then(() => {
     console.log('데이터베이스 연결 성공');
   })
@@ -63,7 +63,6 @@ app.use('/user', userRouter);
 app.use('/postTitle', postTitleRouter); 
 app.use('/profile', profileRouter);
 app.use('/profileAlter', profileAlterRouter);
-// app.use('/intruduction', introductionRouter);
 app.use('/introduction',introductionRouter);
 
 app.use((req, res, next) => {

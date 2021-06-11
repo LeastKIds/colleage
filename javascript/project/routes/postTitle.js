@@ -64,6 +64,14 @@ router.post('/create',isLoggedIn, async(req,res,next) => {
   
 });
 
+router.get('/create', isLoggedIn, async(req,res,next) => {
+
+  res.render('postCreate', {
+    title : 'Q&A',
+    check : 1,
+  });
+});
+
 router.post('/delete', isLoggedIn, async(req,res,next) => {
 
   Comment.destroy({
@@ -78,8 +86,16 @@ router.post('/delete', isLoggedIn, async(req,res,next) => {
 });
 
 router.post('/alter', isLoggedIn, async(req,res,next) => {
-  
-})
+  const post = await Post.findOne({
+    where : { id : req.body.postId } ,
+  });
+
+  res.render('postCreate', {
+    title : 'Q&A',
+    post : post,
+    check : 2,
+  });
+});
 
 router.get('/:id',isLoggedIn, async (req,res,next) => {
   
@@ -99,7 +115,6 @@ router.get('/:id',isLoggedIn, async (req,res,next) => {
         order: [['createdAt']],
         where : { PostId : req.query.twitId }
       });
-
       res.render('postTitle', { 
          title: '게시판',
          twit : post ,
@@ -108,6 +123,7 @@ router.get('/:id',isLoggedIn, async (req,res,next) => {
         
        });
 
+       
 
     } catch (err) {
       console.error(err);

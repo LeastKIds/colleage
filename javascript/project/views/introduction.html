@@ -5,49 +5,39 @@
       <div class="twits">
         {% for introduction in introductions %}
           <div class="twit" for="twitPost">
-            
-              <input type="hidden" value="{{twit.User.id}}" class="twit-user-id">
-              <input type="hidden" value="{{twit.id}}" class="twit-id">
               <div class="twit-title" >
                 
                   <div class="twit-author">{{introduction.title}}</div>
+                  <hr>
                   
               </div>
               
               <div class="twit-content">{{introduction.content}}</div>
-  
-            
+              {% if user.id === 1 %}
+              <form action="/introduction/alter" method="get">
+                <button id = "twit-btn" type="submit" class="btn">수정</button>
+                <input type="hidden" value="{{introduction.id}}" name="postId">
+              </form>
+              {% endif %}
+              
+            </form>
             {% if introduction.img %}
               <div class="twit-img"><img src="{{introduction.img}}" alt="섬네일"></div>
             {% endif %}
 
-           
+            
           </div>
           
           
         {% endfor %}
 
-        {% if user %}
-        <div>
-          <form id="twit-form" action="/introduction" method="post" enctype="multipart/form-data">
-            <div class="title-group">
-              <textarea id="title" name="title" maxlength="20" ></textarea>
-            </div>
-            <div class="input-group">
-              <textarea id="twit" name="content" maxlength="140"></textarea>
-            </div>
-            <div class="img-preview">
-              <img id="img-preview" src="" style="display: none;" width="250" alt="미리보기">
-              <input id="img-url" type="hidden" name="url">
-            </div>
-            <div>
-              <label id="img-label" for="img">사진 업로드</label>
-              <input id="img" type="file" accept="image/*">
-              <button id="twit-btn" type="submit" class="btn">짹짹</button>
-            </div>
-          </form>
-        </div>
-      {% endif %}
+        {% if user.id === 1 %}
+        <form action="/introduction/create" method="get">
+          <button id = "twit-btn" type="submit" class="btn">작성</button>
+        </form>
+          
+        {% endif %}
+        
 
       
         
@@ -55,24 +45,3 @@
     </div>
 {% endblock %}
 
-{% block script %}
-  <script>
-    if (document.getElementById('img')) {
-      document.getElementById('img').addEventListener('change', function(e) {
-        const formData = new FormData();
-        console.log(this, this.files);
-        formData.append('img', this.files[0]);
-        axios.post('/post/img', formData)
-          .then((res) => {
-            document.getElementById('img-url').value = res.data.url;
-            document.getElementById('img-preview').src = res.data.url;
-            document.getElementById('img-preview').style.display = 'inline';
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      });
-    }
-
-  </script>
-{% endblock %}

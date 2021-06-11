@@ -21,6 +21,7 @@
             </div>
           <input id="my-id" type="hidden" value="{{user.id}}">
           <a id="logout" href="/auth/logout" class="btn">로그아웃</a>
+          <a id="logout" href="/" class="btn">처음으로</a>
         {% else %}
           <form id="login-form" action="/auth/login" method="post">
             <div class="input-group">
