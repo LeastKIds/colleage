@@ -18,6 +18,11 @@
                 <button id = "twit-btn" type="submit" class="btn">수정</button>
                 <input type="hidden" value="{{introduction.id}}" name="postId">
               </form>
+
+              <form action="/introduction/delete" method="get">
+                <button id = "twit-btn" type="submit" class="btn">삭제</button>
+                <input type="hidden" value="{{introduction.id}}" name="postId">
+              </form>
               {% endif %}
               
             </form>

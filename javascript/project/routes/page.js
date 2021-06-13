@@ -42,6 +42,9 @@ router.post('/search', async(req,res,next) => { // /search로 post요청이 들�
   const keyword=req.body.search;  // 프론트에서 넘어온 데이터를 저장(검색기능)
   try{
     const post = await Post.findAll({ // Post 타이틀 검색
+      include : {
+        model : User,
+      },
       where : {title : {[Op.like] : '%'+keyword+'%' } },
     });
 

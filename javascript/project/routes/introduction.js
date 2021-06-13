@@ -99,4 +99,11 @@ router.get('/alter', isLoggedIn, async(req,res,next) => { // /introduction/alter
     check : 2,  // 수정 함을 체크함
   });
 });
+
+router.get('/delete', isLoggedIn, async(req,res,next) => {
+  await Introduction.destroy({
+    where : { id : req.query.postId },
+  });
+  res.redirect('/introduction');
+})
 module.exports = router;
