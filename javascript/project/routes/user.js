@@ -5,7 +5,7 @@ const User = require('../models/user');
 
 const router = express.Router();
 
-router.post('/:id/follow', isLoggedIn, async (req, res, next) => {
+router.post('/:id/follow', isLoggedIn, async (req, res, next) => {  // 
   try {
     const user = await User.findOne({ where: { id: req.user.id } });
     if (user) {

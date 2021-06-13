@@ -3,13 +3,13 @@ const local = require('./localStrategy');
 const kakao = require('./kakaoStrategy');
 const User = require('../models/user');
 
-module.exports = () => {
-  passport.serializeUser((user, done) => {
+module.exports = () => {  // 밖으로 내보내기
+  passport.serializeUser((user, done) => {  // 로그인 시 실행
     done(null, user.id);
   });
 
-  passport.deserializeUser((id, done) => {
-    User.findOne({
+  passport.deserializeUser((id, done) => {  // 매 순간 실행
+    User.findOne({  // 팔로워를 확인 하는 부분이지만, 현재로써는 사용하지 않기 때문에 필요 없다.
       where: { id },
       include: [{
         model: User,
@@ -25,6 +25,6 @@ module.exports = () => {
       .catch(err => done(err));
   });
 
-  local();
-  kakao();
+  local();  // 로컬 부분
+  kakao();  // 카카오 부분
 };
