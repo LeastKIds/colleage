@@ -1,18 +1,15 @@
 package server;
 
-import java.io.BufferedOutputStream;
-import org.json.simple.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-import java.io.UnsupportedEncodingException;
+
+import org.json.simple.JSONObject;
 
 /**
  * �̹����� �� �� �� ������ �����ϴ� Ŭ���̾�Ʈ�� ���鵵�� �ϰڽ��ϴ�.
@@ -79,7 +76,7 @@ class SenderThread extends Thread {
 			
 			PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(),StandardCharsets.UTF_8));
 			// OutputStreamWriter writer2=new OutputStreamWriter(socket.getOutputStream(),"utf-8");
-
+			Gson gson=new Gson();
 			
 			System.out.println(name);
 			JSONObject jsonNickName = new JSONObject();

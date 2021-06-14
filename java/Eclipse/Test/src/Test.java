@@ -1,17 +1,15 @@
 
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-import java.io.UnsupportedEncodingException;
+
+import com.google.gson.Gson;
 
 /**
  * �̹����� �� �� �� ������ �����ϴ� Ŭ���̾�Ʈ�� ���鵵�� �ϰڽ��ϴ�.
@@ -33,6 +31,7 @@ class ReceiverThread extends Thread {
 
 	public ReceiverThread(Socket socket) {
 		this.socket = socket;
+		Gson gson = new Gson();
 	}
 
 	@Override

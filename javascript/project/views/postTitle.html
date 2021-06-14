@@ -86,14 +86,19 @@
 
 {% block script %}
 <script>
-  (async () => {
-    try{
-      const result = await axios.get('/postTitle');
-      document.getElementById('titleSetting').innerText='adf';
-    } catch (error)
-    {
-      console.error(error);
-    }
-  })
+   function deleteBtn() {
+     axios.post('/post/img', formData)
+          .then((res) => {
+            document.getElementById('img-url').value = res.data.url;
+            document.getElementById('img-preview').src = res.data.url;
+            document.getElementById('img-preview').style.display = 'inline';
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+   }
+        
+      
+          
 </script>
 {% endblock %}

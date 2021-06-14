@@ -105,5 +105,11 @@ router.get('/delete', isLoggedIn, async(req,res,next) => {
     where : { id : req.query.postId },
   });
   res.redirect('/introduction');
+});
+
+router.post('/delete', isLoggedIn, async(req,res) => {
+  const postId = req.body.postId;
+  console.log('--------------------------');
+  console.log(postId);
 })
 module.exports = router;

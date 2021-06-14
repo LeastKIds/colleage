@@ -20,8 +20,8 @@
               </form>
 
               <form action="/introduction/delete" method="get">
-                <button id = "twit-btn" type="submit" class="btn">삭제</button>
-                <input type="hidden" value="{{introduction.id}}" name="postId">
+                <button id = "twit-btn" type="submit" class="btn" onclick="deleteBtn()">{{introduction.id}}삭제</button>
+                <input id="postId" type="hidden" value="{{introduction.id}}" name="postId">
               </form>
               {% endif %}
               
@@ -50,3 +50,21 @@
     </div>
 {% endblock %}
 
+
+{% block script %}
+<script>
+   function deleteBtn() {
+     const postId = document.getElementById('postId').value;
+     axios.post('/introduction/delete', {postId : postId})
+          .then((res) => {
+            
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+   }
+        
+      
+          
+</script>
+{% endblock %}
