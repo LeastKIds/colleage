@@ -1,0 +1,99 @@
+자동로그인 / sharede....
+
+지도에서 뒤로 가기 맊기
+@Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
+
+
+
+지도에서 뒤로 가기 두 번이면 끄기
+@Override
+public void onBackPressed() {
+    // 기존 뒤로가기 버튼의 기능을 막기위해 주석처리 또는 삭제
+    // super.onBackPressed();
+
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지났으면 Toast Show
+    // 2000 milliseconds = 2 seconds
+    if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+        backKeyPressedTime = System.currentTimeMillis();
+        toast = Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+        toast.show();
+        return;
+    }
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
+    // 현재 표시된 Toast 취소
+    if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+        finish();
+        toast.cancel();
+    }
+}
+
+안드로이드 소켓 io
+
+dependencies{
+    implementation('io.socket:socket.io-client:1.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+}
+
+---------------------------------------------------------
+
+private Socket mSocket;
+{
+    try {
+        mSocket = IO.socket("http://서버ip:포트번호");	// 타조 앱 .site/ws-room (룸 리스트 받아옴) (json으로) 맨처음에는 get으로 (타조 앱.site/rooms) 방 목록
+    } catch (URISyntaxException e) {			// 타조 앱.site/ws-room-방 아이디(1)
+    }
+}
+
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mSocket.on("받을 이벤트명", onNewMessage);	// createRoom -> (방 하나의 데이터) // destroyRoom -> (삭제된 방의 정보) ( 내가 보낼 땐 delete, 타조.site/rooms/룸아이디)
+						// 타조.site/rooms 포스트로 json : name / userLimit / gender / startAt(만나는시간) / originLat / originLng, destinationLat / destinationLng
+    mSocket.connect();				// 들어가면 hello 라는 이벤트로 room 문자열 도착 (방 목록)
+						// 
+}
+
+private Emitter.Listener onNewMessage = new Emitter.Listener() {
+    @Override
+    public void call(final Object... args) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                String username;
+                String message;
+                try {
+                    username = data.getString("username");
+                    message = data.getString("message");
+                } catch (JSONException e) {
+                    return;
+                }
+                // 메시지를 받으면 data에 담고,
+                // username와 message라는 키값으로 들어왔다는 가정으로 작성된 코드다.
+                // addMessage(username, message); 이런 식으로 코드를 실행시키면 addMessage 쪽으로 인자를 담아 보내니 화면에 노출하게 만들면 될 것이다.
+                
+            }
+        });
+    }
+};
+
+
+https://blog.hongmono.io/20?category=443205
+
+
+로그인 토큰 (jwt)
+
+JSONObject data = new JSONObject();
+try {
+  data.put("username", "홍길동");
+  data.put("message", "헬로 월드");
+  mSocket.emit('받을 이벤트명', data);
+} catch(JSONException e) {
+  e.printStackTrace();
+}
